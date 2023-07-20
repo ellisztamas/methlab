@@ -3,6 +3,22 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
+import codecs
+import os.path
+
+# Functions to pull the package version from init.py
+def read(rel_path):
+    here = os.path.abspath(os.path.dirname(__file__))
+    with codecs.open(os.path.join(here, rel_path), 'r') as fp:
+        return fp.read()
+
+def get_version(rel_path):
+    for line in read(rel_path).splitlines():
+        if line.startswith('__version__'):
+            delim = '"' if '"' in line else "'"
+            return line.split(delim)[1]
+    else:
+        raise RuntimeError("Unable to find version string.")
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -31,22 +47,22 @@ setup(
     description="Python tools for the epiclines ERC project",
     entry_points={
         'console_scripts': [
-            'align_filenames=epiclines_tools.cli:align',
+            'align_filenames=epiclinestools.cli:align',
         ],
     },
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
-    keywords='epiclines_tools',
-    name='epiclines_tools',
-    packages=find_packages(include=['epiclines_tools', 'epiclines_tools.*']),
+    keywords='epiclinestools',
+    name='epiclinestools',
+    packages=find_packages(include=['epiclinestools', 'epiclinestools.*']),
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/ellisztamas/epiclines_tools',
-    version='0.1.2',
+    url='https://github.com/ellisztamas/epiclinestools',
     zip_safe=False,
     include_package_data=True,
+    version=get_version("epiclinestools/__init__.py"),
     package_data={
-        "epiclines_tools": ["data/*.csv"]
+        "epiclinestools": ["data/*.csv"]
     }
 )

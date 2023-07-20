@@ -1,6 +1,6 @@
 import pandas as pd
 
-import epiclines_tools as epi
+import epiclinestools as epi
 
 file_list = [
     'H3H7YDRXY_1#144456_ACTCGCTAAAGGCTAT.fastq.gz',
@@ -18,7 +18,7 @@ class Test_align_fastq_with_plate_positions:
         """
         Test align_fastq_with_plate_positions with external data.
         """
-        index_sets = "epiclines_tools/data/nordborg_nextera_index_sets.csv"
+        index_sets = "epiclinestools/data/nordborg_nextera_index_sets.csv"
         x = epi.align_fastq_with_plate_positions(file_list, index_sets, "test")
         assert isinstance(x, pd.DataFrame)
         assert x.shape[0] == 3
