@@ -9,8 +9,8 @@ epiclinestools
 .. .. image:: https://img.shields.io/travis/ellisztamas/epiclinestools.svg
 ..         :target: https://travis-ci.com/ellisztamas/epiclinestools
 
-.. .. image:: https://readthedocs.org/projects/epiclines-tools/badge/?version=latest
-..         :target: https://epiclines-tools.readthedocs.io/en/latest/?version=latest
+.. .. image:: https://readthedocs.org/projects/epiclinestools/badge/?version=latest
+..         :target: https://epiclinestools.readthedocs.io/en/latest/?version=latest
 ..         :alt: Documentation Status
 
 Python tools to automate common tasks for the epiclines ERC project in the
