@@ -1,0 +1,45 @@
+# epiclinestools
+
+## A class for disecting allc files
+
+25th July 2023
+
+Created a class to import and take apart cytosine coverage files from Bismark.
+
+* `count_reads` counts up methylated and unmethylated reads, plus total number
+    of cytosines in each sequence context.
+* `methylation_over_features` takes series of genome coordinates (from an
+    annotation file, for example), pulls out each part of the coverage file and
+    calls `count_reads` on each.
+* `conversion_rate` calculates mean methylation on each chromosome
+* `methylation_in_windows` partitions the genome in to windows of fixed size and
+    calls `count_reads` on each.
+
+Added test data and a test file.
+
+Updated to v0.2.2
+
+## Renamed to epiclinestools to conform to Python standards
+
+20th July 2023
+
+Corrected how versioning is done - this ought to be done in __init__.py and be imported to setup.py
+I'm not really sure what setup.cfg is doing.
+
+## Initial commit
+
+Changes to be committed:
+new file:   AUTHORS.rst
+new file:   CONTRIBUTING.rst
+new file:   HISTORY.rst
+new file:   LICENSE
+new file:   MANIFEST.in
+new file:   README.rst
+new file:   epiclines_tools/align_fastq_with_plate_positions.py
+new file:   epiclines_tools/data/nordborg_nextera_index_sets.csv
+new file:   epiclines_tools/data/plate_2022-007.csv
+new file:   epiclines_tools/data/unique_nextera_dual_xt.csv
+new file:   setup.cfg
+new file:   setup.py
+new file:   tests/test_align_fastq_with_plate_positions.py
+new file:   tests/test_epiclines_tools.py
