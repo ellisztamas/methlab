@@ -70,8 +70,20 @@ def test_conversion_rate():
     path="tests/test_data/test_coverage2cytosine.txt.gz"
     c2c = CytosineCoverageFile(path)
     cr = c2c.conversion_rate()
-
     assert all( cr['context'].isin(['CG', "CHG", "CHH", "total"]) )
+    # Check it returns entries for all chromosomes
+    chr_names = ['Chr1', 'Chr2', 'Chr3', 'Chr4', 'Chr5', 'ChrC', 'ChrM', 'Lambda_NEB', 'pUC19']
+    assert all( cr['id'].isin(chr_names))
+
+    # Check this works for a subset of chromosomes.
+    cr_chloroplast = c2c.conversion_rate(chr_labels=['ChrC', "Lambda_NEB"])
+    assert all( cr_chloroplast['id'].isin(['ChrC', "Lambda_NEB"]))
+
+    # If a chromosome label is not in the cytosine file, return NaN
+    # I don't know if this should return an error
+    with pytest.warns(UserWarning):
+        chr6 = c2c.conversion_rate(chr_labels=['Chr6'])
+
     # Commented out because pUC19 has zero reads at all and returns NaN
     # Need to decide how to handle that.
     # assert all( 

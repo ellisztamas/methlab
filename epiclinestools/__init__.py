@@ -2,7 +2,7 @@
 
 __author__ = """Tom Ellis"""
 __email__ = 'thomas.ellis@gmi.oeaw.ac.at'
-__version__ = '0.2.2'
+__version__ = '0.2.7'
 
 import argparse
 

@@ -60,13 +60,8 @@ def import_index_set(index_set:str):
     check_col_names = all([col_name in adapter_indices.keys() for col_name in ['row', 'col', 'seq1', 'seq2'] ])
     if not check_col_names:
         raise ValueError("`adapter_indices` should contain at least the headers 'row', 'col', 'seq1' and 'seq2'")
-    # Check adapter sequences are 8 nucleotides
-    if not all([len(adapter) == 8 for adapter in adapter_indices['seq1'] ]):
-        raise ValueError("Adapters in column 'seq1' should be length 8")
-    if not all([len(adapter) == 8 for adapter in adapter_indices['seq2'] ]):
-        raise ValueError("Adapters in column 'seq1' should be length 8")
     
-    # Merge adapters into a single 16-nucleotide sequence.
+    # Merge adapters into a single sequence.
     adapter_indices['seq_combined'] = adapter_indices['seq1'] + adapter_indices['seq2']
 
     return adapter_indices
@@ -105,7 +100,7 @@ def align_fastq_with_plate_positions(input_files:list, adapter_indices:str, pref
     # For each fastq file, find the position of the matching adapter sequence in the adapter indices.
     ix = []
     for path_name in input_files:
-        input_adapter_sequence = re.findall('[ACTG]{16}', path_name)[0]
+        input_adapter_sequence = re.findall('[ACTG]+', path_name)[0]
         row_number = np.where(
             adapter_indices['seq_combined'].str.match(input_adapter_sequence)
             )[0][0]

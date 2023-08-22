@@ -1,4 +1,5 @@
 import pandas as pd
+from warnings import warn
 
 
 class CytosineCoverageFile(object):
@@ -151,10 +152,12 @@ class CytosineCoverageFile(object):
             chr = gff_file['seqid'],
             start = gff_file['start'],
             stop = gff_file['end']
-            )    
+            )    conda 
         """
-        check_chr_labels = any(~chr.isin(self.file['chr']))
-        if check_chr_labels:     
+        # check_chr_labels = any(~chr.isin(self.file['chr']))
+        check_chr_labels = all([ any(self.file['chr'].str.contains(x)) for x in chr ])
+
+        if not check_chr_labels:     
             raise ValueError("One or more values in `chr` is not found in the chromosome labels in the coverage file")
 
         if names is None:
@@ -172,17 +175,19 @@ class CytosineCoverageFile(object):
 
         return features
 
-    def conversion_rate(self, return_proportion = True):
+    def conversion_rate(self, chr_labels:list=None, return_proportion = True):
         """
-        Calculate methylation on each chromosome. Conversion rate is 1 minus 
-        these proportions.
+        Calculate methylation on each chromosome.
 
         Parameters
         ==========
         chr: str, probably
             Probably a string indicating which chromosome to calculate 
             conversion rate on. Defaults to the chloroplast.
-        
+        return_proportion: bool
+            If True read counts are returned instead of proportion of methylated
+            cytosines.
+
         Returns
         =======
         Pandas dataframe specifying chromosome, sequence context, proportion of
@@ -202,7 +207,12 @@ class CytosineCoverageFile(object):
         # Disable the conversion to proportions and return raw read counts
         c2c.conversion_rate(return_proportion = False)
         """
-        chr_labels = self.file['chr'].unique()
+
+        if not chr_labels:
+            chr_labels = self.file['chr'].unique()
+
+        if any( [chr not in self.file['chr'].unique() for chr in chr_labels] ):
+            warn("One of more items in `chr_labels` is not found in the `chr` column of the cytosine coverage file.")
 
         chromosomes = {}
         for chr in chr_labels:

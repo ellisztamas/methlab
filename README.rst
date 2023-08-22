@@ -16,12 +16,15 @@ epiclinestools
 Python tools to automate common tasks for the epiclines ERC project in the
 Nordborg group at the Gregor Mendel Institute.
 
-* Free software: MIT license
-
 Features
 --------
 
 * Line up sample names with names of raw bam/fastq files using a CSV of adapter sequences
+
+License
+-------
+
+Free software: MIT license
 
 Credits
 -------
