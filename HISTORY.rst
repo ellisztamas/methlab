@@ -5,7 +5,7 @@ History
 v0.3.0 (8th September 2023)
 ---------------------------
 
-Documentaion for align_fastq_with_plate_positions.
+* Documentaion for align_fastq_with_plate_positions and CytosineCoverageFile.
 
 v0.2.2 (25th July 2023)
 -----------------------
