@@ -261,7 +261,6 @@ class CytosineCoverageFile(object):
         """
         chr_labels = self.file['chr'].unique()
 
-
         reads_over_chromosomes = {}
 
         for chr in chr_labels:
