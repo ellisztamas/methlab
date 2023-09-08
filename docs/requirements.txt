@@ -4,3 +4,4 @@ readthedocs-sphinx-search==0.1.1
 pandas
 numpy
 pytest
+importlib_resources
