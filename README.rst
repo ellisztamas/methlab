@@ -64,14 +64,18 @@ Once you have a copy of the source, you can install it with:
 .. _Github repo: https://github.com/ellisztamas/epiclinestools
 .. _tarball: https://github.com/ellisztamas/epiclinestools/tarball/master
 
+Usage
+=====
+
+See the documentation at https://epiclinestools.readthedocs.io.
 
 License
--------
+=======
 
 Free software: MIT license
 
 Credits
--------
+=======
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 

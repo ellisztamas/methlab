@@ -152,7 +152,7 @@ class CytosineCoverageFile(object):
             chr = gff_file['seqid'],
             start = gff_file['start'],
             stop = gff_file['end']
-            )    conda 
+            ) 
         """
         # check_chr_labels = any(~chr.isin(self.file['chr']))
         check_chr_labels = all([ any(self.file['chr'].str.contains(x)) for x in chr ])
@@ -256,8 +256,8 @@ class CytosineCoverageFile(object):
         path="tests/test_data/test_coverage2cytosine.txt.gz"
         c2c = CytosineCoverageFile(path)
 
-        # Return proportion of methylation on each chromosome
-        c2c.methylation_in_windows(window_size)
+        # Methylation in 150-bp windows
+        c2c.methylation_in_windows(150)
         """
         chr_labels = self.file['chr'].unique()
 

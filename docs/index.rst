@@ -12,9 +12,10 @@ If you do manage to use ``epiclinestools`` in your work please cite::
    Available: https://github.com/ellisztamas/epiclinestools
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    installation
    modules/align_plate_positions.rst
+   modules/CytosineCoverageFile.rst
    history
