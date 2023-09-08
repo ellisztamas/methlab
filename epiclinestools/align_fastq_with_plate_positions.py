@@ -81,13 +81,14 @@ def align_fastq_with_plate_positions(input_files:list, adapter_indices:str, pref
         all be from a single sequencing plate, or else there will be multiple
         matches to each row/column position.
     adapter_indices: str
-        Path to a dataframe with a row for each index pair and columns showing
-        which row/column in the sequence plate the indices correspond to. If 
-        there are multiple index sets (for example there are 8 sets for the
-        Nextera sets), give a row for all possible sets. Two index sets are
+        Name of the index set. Provide a name of an internal index set, or a
+        path to an external CSV file. Two index sets are
         available internally in the package and can be used by passing
         'nordborg' for the Nordborg Nextera INDEX set 1-8 or 'dualxt' for the
-        Unique Nextera Dual XT indices.
+        Unique Nextera Dual XT indices. External files should contain columns
+        called 'row', 'col', 'seq1' and 'seq2'. If there are multiple index sets
+        (for example there are 8 sets for the Nextera sets), give a row for all 
+        possible sets. 
     prefix: str
         Prefix name to be given to the samples. This is usually a label for the 
         plate name. This is appended to the position label in the output.

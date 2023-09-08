@@ -7,7 +7,7 @@ of the Epiclines ERC project awarded to Magnus Nordborg at the Gregor Mendel
 Institute in Vienna.It was designed primarily for internal use and may well make
 no sense at all to anyone outside the group.
 
-If you do manage to use ``epiclinestools`` in your work please cite ::
+If you do manage to use ``epiclinestools`` in your work please cite::
    Ellis, Thomas James (2023), "epiclinestools: A Python package for bisulphite-data analysis",
    Available: https://github.com/ellisztamas/epiclinestools
 
@@ -17,9 +17,4 @@ If you do manage to use ``epiclinestools`` in your work please cite ::
 
    installation
    modules/align_plate_positions.rst
-
-Indices and tables
-==================
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   history

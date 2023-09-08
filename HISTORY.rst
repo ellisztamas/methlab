@@ -2,7 +2,26 @@
 History
 =======
 
+v0.3.0 (8th September 2023)
+---------------------------
+
+Documentaion for align_fastq_with_plate_positions.
+
+v0.2.2 (25th July 2023)
+-----------------------
+
+Created a class to import and take apart cytosine coverage files from Bismark.
+
+- `count_reads` counts up methylated and unmethylated reads, plus total number of cytosines in each sequence context.
+- `methylation_over_features` takes series of genome coordinates (from an
+    annotation file, for example), pulls out each part of the coverage file and
+    calls `count_reads` on each.
+* `conversion_rate` calculates mean methylation on each chromosome
+* `methylation_in_windows` partitions the genome in to windows of fixed size and
+    calls `count_reads` on each.
+
 0.1.0 (2023-06-29)
 ------------------
 
-* First release on PyPI.
+- Initial commit 
+- Function `align_fastq_with_plate_positions.py`` looks up adaptor index positions from bam file names
