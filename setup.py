@@ -50,7 +50,7 @@ setup(
             'align_filenames=epiclinestools.cli:align',
         ],
     },
-    install_requires=requirements,
+    install_requires=[pandas, numpy],
     license="MIT license",
     long_description=readme + '\n\n' + history,
     keywords='epiclinestools',

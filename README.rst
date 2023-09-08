@@ -16,10 +16,54 @@ epiclinestools
 Python tools to automate common tasks for the epiclines ERC project in the
 Nordborg group at the Gregor Mendel Institute.
 
-Features
---------
+Installation
+============
 
-* Line up sample names with names of raw bam/fastq files using a CSV of adapter sequences
+Stable release
+--------------
+
+To install epiclinestools, run this command in your terminal:
+
+.. code-block:: console
+
+    $ pip install epiclinestools
+
+This is the preferred method to install epiclinestools, as it will always install the most recent stable release.
+
+If you don't have `pip`_ installed, this `Python installation guide`_ can guide
+you through the process.
+
+.. _pip: https://pip.pypa.io
+.. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
+
+
+From sources
+------------
+
+The sources for epiclinestools can be downloaded from the `Github repo`_.
+
+You can either clone the public repository:
+
+.. code-block:: console
+
+    $ git clone git://github.com/ellisztamas/epiclinestools
+
+Or download the `tarball`_:
+
+.. code-block:: console
+
+    $ curl -OJL https://github.com/ellisztamas/epiclinestools/tarball/master
+
+Once you have a copy of the source, you can install it with:
+
+.. code-block:: console
+
+    $ python setup.py install
+
+
+.. _Github repo: https://github.com/ellisztamas/epiclinestools
+.. _tarball: https://github.com/ellisztamas/epiclinestools/tarball/master
+
 
 License
 -------
