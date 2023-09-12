@@ -13,6 +13,7 @@ class BismarkSam(object):
         self.length = len(read[9])
         self.xm_tag = read[13][5:]
         self.seq = read[9]
+        self.flag = read[1]
     
     def count_mC(self):
         """
@@ -67,6 +68,7 @@ class BismarkSam(object):
             cluster = 'NA'
         
         return [self.chr, mC, uC, total, cluster]
+    
 
 def read_SAM(input:str):
     """

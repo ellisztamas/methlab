@@ -2,6 +2,20 @@
 History
 =======
 
+v0.4.1 (12th September 2023)
+----------------------------
+
+- Fixed ``install_requires``.
+- SAM files now return the SAM flag.
+
+
+v0.4.0 (12th September 2023)
+----------------------------
+
+- Class to manipulate aligned SAM files from Bismark.  
+- Included docs on how to use.
+    
+
 v0.3.0 (8th September 2023)
 ---------------------------
 
