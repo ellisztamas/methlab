@@ -18,4 +18,5 @@ If you do manage to use ``epiclinestools`` in your work please cite::
    installation
    modules/align_plate_positions.rst
    modules/CytosineCoverageFile.rst
+   modules/BismarkSam.rst
    history
