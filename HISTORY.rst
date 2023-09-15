@@ -2,6 +2,12 @@
 History
 =======
 
+v0.4.2 (15th September 2023)
+----------------------------
+- Committed docs for ``CytosineCoverageFile`` and ``BismarkSam``.
+- Added support for pulling out strand tags from SAM files. This generalises to
+    any custom SAM tag. 
+
 v0.4.1 (12th September 2023)
 ----------------------------
 

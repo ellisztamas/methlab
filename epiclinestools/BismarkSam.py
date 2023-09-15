@@ -4,17 +4,42 @@ class BismarkSam(object):
     """
     def __init__(self, read) -> None:
         """
-        Initialise class function
+        Initialise class function.
         """
+        self.read = read
         if read[13][:5] != "XM:Z:":
             raise ValueError("Element 13 of this read is not an XM tag. This read does not appear to be a Bismark-sorted SAM file.")
         self.id = read[0]
         self.chr = read[2]
         self.length = len(read[9])
-        self.xm_tag = read[13][5:]
         self.seq = read[9]
         self.flag = read[1]
+        self.xm_tag = self.get_tag("XM:Z:")
+        self.strand = self.get_tag("YS:Z:")
     
+    def get_tag(self, tag_name):
+        """
+        Retrieve a tag from the SAM entry with a specific tag.
+
+        This checks each tag in the SAM entry for whether the input tag name
+        matches the *start* of each tag, and pulls out the string after the end
+        of the tag name.
+
+        Example
+        =======
+        # Strand can be coded as "YS:Z:CTOT", and you want to retreive "CTOT"
+        read.get_tag("YS:Z:")
+        """
+        tag_length = len(tag_name)
+        tag_value = [tag[tag_length:] for tag in self.read if tag[:tag_length] == tag_name]
+        number_of_values = len(tag_value)
+        if number_of_values == 0:
+            return 'NA'
+        elif number_of_values == 1:
+            return tag_value[0]
+        elif number_of_values > 1:
+            raise ValueError("Multiple tags were found with the same tag ID")
+
     def count_mC(self):
         """
         Count how many cytosines on a read are methylated, unmethylated, and the total.
