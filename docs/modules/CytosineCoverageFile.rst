@@ -17,7 +17,7 @@ number of methylated reads, number of unmethylated reads, sequence context
 (CG, CHG or CHH) and tricnucleotide context (for example, for CHG methylation
 this could be CAG, CCG or CTG).
 
-:: code:: python
+.. code-block:: python
     import epiclinestools as epi
 
     path="tests/test_data/test_coverage2cytosine.txt.gz"
@@ -33,13 +33,13 @@ Calculate overall methylation on each chromosome separately.
 This is especially useful for calculating conversion rates by quantifying 
 methylation on the chloroplast
 
-:: code:: python
+.. code-block:: python
     # Return proportion of methylation on each chromosome
     c2c.conversion_rate()
 
 You can also return raw read counts instead of proportions:
 
-:: code:: python
+..code-block:: python
     c2c.conversion_rate(return_proportion = False)
 
 Here is an example of the output for chromosome 1 only.
@@ -92,7 +92,7 @@ start and stop coordinates that are easily extracted from such files.
 
 Here is an example using the first ten lines of the TAIR10 annotation file
 
-.. code:: python
+.. code-block:: python
     gff_file = pd.read_csv(
         "tests/test_data/test_TAIR10_GFF3_genes_transposons.gff",
         sep="\t",
@@ -108,7 +108,7 @@ Here is an example using the first ten lines of the TAIR10 annotation file
 
 Here is the output for the first three features.
 
-.. code-block::
+.. code-block:: python
             id context  meth  unmethylated  ncytosines
     0   feature0      CG     2            14          20
     1   feature0     CHG     0             4           8

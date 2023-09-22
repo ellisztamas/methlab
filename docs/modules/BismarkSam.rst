@@ -13,7 +13,7 @@ Read a sample SAM file into memory as a list of BismarkSam objects.
 It is assumed that the SAM file came from a BAM file that had been aligned with
 Bismark.
 
-.. code:: python
+.. code-block:: python
     from epiclinestools.BismarkSam import *
 
     path = "tests/test_data/chloroplast.sam"
@@ -22,7 +22,7 @@ Bismark.
 Return some basic information about the third read in the file: read ID, read
 length, chromosome and read sequence.
 
-.. code:: python
+.. code-block:: python
     sam[2].id
     sam[2].length
     sam[2].chr

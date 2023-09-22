@@ -36,7 +36,7 @@ From the previous section it is clear that if you know the 16-nucleotide adapter
 
 Using Python import the modules needed and make a list of filenames. In this fictional example, imagine you have a folder of pairs of fastq files corresponding to forward and reverse read pairs for each sample.
 
-.. code:: python
+.. code-block:: python
     import pandas as pd
     from glob import glob
     import os
@@ -51,7 +51,7 @@ Pass this list to the function ``align_fastq_with_plate_positions``. This functi
 
 Sample names are returned as the row/column name; here we specify an optional prefix ``t4_p2_`` which adds the temperature and plate ID for these data, so sample names will look something like ``t4_p2_G1``.
 
-.. code:: python
+.. code-block:: python
     epi.align_fastq_with_plate_positions(
         input_files,
         adapter_indices = 'nordborg', # specify that we need the Nordborg group custom nextera indices
