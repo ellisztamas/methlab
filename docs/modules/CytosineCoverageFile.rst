@@ -17,7 +17,7 @@ number of methylated reads, number of unmethylated reads, sequence context
 (CG, CHG or CHH) and tricnucleotide context (for example, for CHG methylation
 this could be CAG, CCG or CTG).
 
-.. code-block:: python
+:
     import epiclinestools as epi
 
     path="tests/test_data/test_coverage2cytosine.txt.gz"
