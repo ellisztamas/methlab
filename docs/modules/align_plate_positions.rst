@@ -7,7 +7,7 @@ submit something like an Excel sheet giving rows/columns of the plate and the
 biological sample that should be in each well. What we get back from the NGS
 facility is a mass of bam or fastq files that look something like this:
 
-.. code-block::
+.. parsed-literal::
     H3H7YDRXY_1#144456_ACTCGCTACGTCTAAT.bam
 
 How is one meant to determine which sample in the original plate each file is
@@ -79,7 +79,7 @@ additional column 'set'.
 For example, here are the first 10 rows of the index file for the Unique Nextera
 Dual XT index set:
 
-.. code-block::
+.. parsed-literal::
     set,row,col,name1,seq1,name2,seq2
     1,A,1,7001,CGCTCAGTTC,5001,TCGTGGAGCG
     1,A,2,7002,TATCTGACCT,5002,CTACAAGATA

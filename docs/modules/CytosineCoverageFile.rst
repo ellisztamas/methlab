@@ -33,19 +33,20 @@ Calculate overall methylation on each chromosome separately.
 This is especially useful for calculating conversion rates by quantifying 
 methylation on the chloroplast
 
-::
-    # Return proportion of methylation on each chromosome    c2c.conversion_rate()
+.. code-block:: python
+    # Return proportion of methylation on each chromosome
+    c2c.conversion_rate()
 
 You can also return raw read counts instead of proportions:
 
-::
+.. code-block:: python
     c2c.conversion_rate(return_proportion = False)
 
 Here is an example of the output for chromosome 1 only.
 Notice that the format is the proportion of *methylated* rather than *unmethylated*
 cytosines, so it isn't really conversion rate in that the strict sense.
 
-::
+.. parsed-literal::
     id context      meth  unmethylated  ncytosines  n_reads
     Chr1      CG  0.356164      0.643836          82       73
     Chr1     CHG  0.333333      0.666667          68       54
@@ -58,14 +59,14 @@ Methylation in windows
 Count the number of methylated and unmethylated reads and number of  cytosines
 in CG, CHG and CHH contexts in windows of fixed size across the genome.
 
-::
+.. code-block:: python
     # Methylation in 150-bp windows
     windows = c2c.methylation_in_windows(150)
 
 Here is an example of the output. You can see that windows are indxed by their
 start position.
 
-::
+.. parsed-literal::
         chr  start context  meth  unmethylated  ncytosines
     0   Chr1      0      CG    22             4          30
     1   Chr1      0     CHG    15             8          24
@@ -91,7 +92,7 @@ start and stop coordinates that are easily extracted from such files.
 
 Here is an example using the first ten lines of the TAIR10 annotation file
 
-::
+.. code-block:: python
     gff_file = pd.read_csv(
         "tests/test_data/test_TAIR10_GFF3_genes_transposons.gff",
         sep="\t",
@@ -107,7 +108,7 @@ Here is an example using the first ten lines of the TAIR10 annotation file
 
 Here is the output for the first three features.
 
-::
+.. parsed-literal::
             id context  meth  unmethylated  ncytosines
     0   feature0      CG     2            14          20
     1   feature0     CHG     0             4           8

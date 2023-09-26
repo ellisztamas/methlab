@@ -43,7 +43,7 @@ include the tag "XM:" which gives a string indicate metylation.
 Pull out the XM tag with ``sam[2].xm_tag``.
 
 The output looks something like this:
-.. code-block::
+.. parsed-literal::
     'HHH.Z...Z..ZXH....H.....Z.Z..HH.H...............X.............hh........z.......z...................h....h............................'
 
 - There is a character for each nucleotide in the read.
