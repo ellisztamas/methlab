@@ -17,12 +17,11 @@ number of methylated reads, number of unmethylated reads, sequence context
 (CG, CHG or CHH) and tricnucleotide context (for example, for CHG methylation
 this could be CAG, CCG or CTG).
 
-::
-    import epiclinestools as epi
+.. code-block:: python
 
+    import epiclinestools as epi
     path="tests/test_data/test_coverage2cytosine.txt.gz"
     c2c = CytosineCoverageFile(path)
-
     # Access the whole file, if you really must (it's big!)
     c2c.file
 
@@ -34,12 +33,14 @@ This is especially useful for calculating conversion rates by quantifying
 methylation on the chloroplast
 
 .. code-block:: python
+
     # Return proportion of methylation on each chromosome
     c2c.conversion_rate()
 
 You can also return raw read counts instead of proportions:
 
 .. code-block:: python
+
     c2c.conversion_rate(return_proportion = False)
 
 Here is an example of the output for chromosome 1 only.
@@ -47,6 +48,7 @@ Notice that the format is the proportion of *methylated* rather than *unmethylat
 cytosines, so it isn't really conversion rate in that the strict sense.
 
 .. parsed-literal::
+
     id context      meth  unmethylated  ncytosines  n_reads
     Chr1      CG  0.356164      0.643836          82       73
     Chr1     CHG  0.333333      0.666667          68       54
@@ -60,6 +62,7 @@ Count the number of methylated and unmethylated reads and number of  cytosines
 in CG, CHG and CHH contexts in windows of fixed size across the genome.
 
 .. code-block:: python
+
     # Methylation in 150-bp windows
     windows = c2c.methylation_in_windows(150)
 
@@ -67,6 +70,7 @@ Here is an example of the output. You can see that windows are indxed by their
 start position.
 
 .. parsed-literal::
+    
         chr  start context  meth  unmethylated  ncytosines
     0   Chr1      0      CG    22             4          30
     1   Chr1      0     CHG    15             8          24
