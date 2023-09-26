@@ -17,7 +17,7 @@ number of methylated reads, number of unmethylated reads, sequence context
 (CG, CHG or CHH) and tricnucleotide context (for example, for CHG methylation
 this could be CAG, CCG or CTG).
 
-:
+::
     import epiclinestools as epi
 
     path="tests/test_data/test_coverage2cytosine.txt.gz"
@@ -33,53 +33,52 @@ Calculate overall methylation on each chromosome separately.
 This is especially useful for calculating conversion rates by quantifying 
 methylation on the chloroplast
 
-.. code-block:: python
-    # Return proportion of methylation on each chromosome
-    c2c.conversion_rate()
+::
+    # Return proportion of methylation on each chromosome    c2c.conversion_rate()
 
 You can also return raw read counts instead of proportions:
 
-..code-block:: python
+::
     c2c.conversion_rate(return_proportion = False)
 
 Here is an example of the output for chromosome 1 only.
 Notice that the format is the proportion of *methylated* rather than *unmethylated*
 cytosines, so it isn't really conversion rate in that the strict sense.
 
-.. code-block::
-id context      meth  unmethylated  ncytosines  n_reads
-Chr1      CG  0.356164      0.643836          82       73
-Chr1     CHG  0.333333      0.666667          68       54
-Chr1     CHH  0.144715      0.855285         818      615
-Chr1   total  0.179245      0.820755         968      742
-
+::
+    id context      meth  unmethylated  ncytosines  n_reads
+    Chr1      CG  0.356164      0.643836          82       73
+    Chr1     CHG  0.333333      0.666667          68       54
+    Chr1     CHH  0.144715      0.855285         818      615
+    Chr1   total  0.179245      0.820755         968      742
+    
 Methylation in windows
 ======================
 
 Count the number of methylated and unmethylated reads and number of  cytosines
 in CG, CHG and CHH contexts in windows of fixed size across the genome.
 
-.. code:: python
+::
     # Methylation in 150-bp windows
     windows = c2c.methylation_in_windows(150)
 
 Here is an example of the output. You can see that windows are indxed by their
 start position.
 
-.. code-block::
-    chr  start context  meth  unmethylated  ncytosines
-0   Chr1      0      CG    22             4          30
-1   Chr1      0     CHG    15             8          24
-2   Chr1      0     CHH    48           228         273
-3   Chr1      0   total    85           240         327
-4   Chr1   1000      CG     0             9          14
-5   Chr1   1000     CHG     2            17          28
-6   Chr1   1000     CHH    14           115         275
-7   Chr1   1000   total    16           141         317
-8   Chr1   2000      CG     4            34          38
-9   Chr1   2000     CHG     1            11          16
-10  Chr1   2000     CHH    27           183         270
-11  Chr1   2000   total    32           228         324
+::
+        chr  start context  meth  unmethylated  ncytosines
+    0   Chr1      0      CG    22             4          30
+    1   Chr1      0     CHG    15             8          24
+    2   Chr1      0     CHH    48           228         273
+    3   Chr1      0   total    85           240         327
+    4   Chr1   1000      CG     0             9          14
+    5   Chr1   1000     CHG     2            17          28
+    6   Chr1   1000     CHH    14           115         275
+    7   Chr1   1000   total    16           141         317
+    8   Chr1   2000      CG     4            34          38
+    9   Chr1   2000     CHG     1            11          16
+    10  Chr1   2000     CHH    27           183         270
+    11  Chr1   2000   total    32           228         324
 
 Methylation over annotated features
 ===================================
@@ -92,7 +91,7 @@ start and stop coordinates that are easily extracted from such files.
 
 Here is an example using the first ten lines of the TAIR10 annotation file
 
-.. code-block:: python
+::
     gff_file = pd.read_csv(
         "tests/test_data/test_TAIR10_GFF3_genes_transposons.gff",
         sep="\t",
@@ -108,7 +107,7 @@ Here is an example using the first ten lines of the TAIR10 annotation file
 
 Here is the output for the first three features.
 
-.. code-block:: python
+::
             id context  meth  unmethylated  ncytosines
     0   feature0      CG     2            14          20
     1   feature0     CHG     0             4           8
