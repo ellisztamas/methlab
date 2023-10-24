@@ -221,7 +221,7 @@ class CytosineCoverageFile(object):
 
         chromosomes = pd.concat(chromosomes).reset_index()
         chromosomes = chromosomes.rename(columns={'level_0': 'id'})
-
+        
         # Convert to proportion methylated
         if return_proportion:
             chromosomes['n_reads']      = chromosomes['meth'] + chromosomes['unmethylated']

@@ -12,7 +12,7 @@ To install epiclinestools, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install epiclinestools
+    $ pip install git+https://github.com/ellisztamas/epiclinestools.git#egg=argh
 
 This is the preferred method to install epiclinestools, as it will always install the most recent stable release.
 

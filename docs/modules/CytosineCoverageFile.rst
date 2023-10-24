@@ -70,7 +70,7 @@ Here is an example of the output. You can see that windows are indxed by their
 start position.
 
 .. parsed-literal::
-    
+
         chr  start context  meth  unmethylated  ncytosines
     0   Chr1      0      CG    22             4          30
     1   Chr1      0     CHG    15             8          24
@@ -97,6 +97,7 @@ start and stop coordinates that are easily extracted from such files.
 Here is an example using the first ten lines of the TAIR10 annotation file
 
 .. code-block:: python
+    
     gff_file = pd.read_csv(
         "tests/test_data/test_TAIR10_GFF3_genes_transposons.gff",
         sep="\t",

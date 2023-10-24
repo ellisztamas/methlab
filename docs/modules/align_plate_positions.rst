@@ -39,7 +39,7 @@ not always look like the ones above. In this case at least you can see:
   `here <https://docs.google.com/spreadsheets/d/1gooUY2Uh23d04bDt7Ph5gGQne4GB-LlApk5h1iO8aUA/edit#gid=0>`_
   is an example of the full set of Nextera Dual XT adapters, for up to four plates.
   The full cornucopia of adapter sets available at the NGS facility is 
-  `here <https://ngs.vbcf.ac.at/forskalle3/account/adaptors>_`, in a format that
+  `here <https://ngs.vbcf.ac.at/forskalle3/account/adaptors>`_, in a format that
   could politely be called "a data-science nightmare".
 
 ============================
@@ -67,7 +67,7 @@ corresponding to forward and reverse read pairs for each sample.
     import epiclines_tools as epi
     print("Using epiclines version " + epi.__version__)
     # List of fastq files
-    input_files=glob("path/to/bam_files/*fastq"
+    input_files=glob("path/to/bam_files/*fastq")
 
 Pass this list to the function ``align_fastq_with_plate_positions``.
 This function looks for a nucleotide sequence inside each file name and matches

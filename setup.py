@@ -52,7 +52,7 @@ setup(
     },
     install_requires=['pandas', 'numpy'],
     license="MIT license",
-    long_description=readme + '\n\n' + history,
+    #long_description=readme + '\n\n' + history,
     keywords='epiclinestools',
     name='epiclinestools',
     packages=find_packages(include=['epiclinestools', 'epiclinestools.*']),
