@@ -122,5 +122,7 @@ def test_methylation_in_windows():
     c2c = CytosineCoverageFile(path)
     
     mc_windows = c2c.methylation_in_windows(1000)
-
     assert len(mc_windows['chr'].unique()) == 9
+
+    chrC = c2c.methylation_in_windows(1000, chr_labels=['ChrC'])
+    assert all(chrC['chr'] == "ChrC")

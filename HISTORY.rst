@@ -2,6 +2,10 @@
 History
 =======
 
+v0.4.3 (25th October 2023)
+--------------------------
+Added support for checking methylation in windows for only a subset of chromosomes
+
 v0.4.2 (15th September 2023)
 ----------------------------
 - Committed docs for ``CytosineCoverageFile`` and ``BismarkSam``.

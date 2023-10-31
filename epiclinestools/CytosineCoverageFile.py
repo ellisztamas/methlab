@@ -181,9 +181,9 @@ class CytosineCoverageFile(object):
 
         Parameters
         ==========
-        chr: str, probably
-            Probably a string indicating which chromosome to calculate 
-            conversion rate on. Defaults to the chloroplast.
+        chr_labels: list of str, probably
+            List of chromosome labels indicating which chromosome to calculate 
+            conversion rate on. Defaults to all chromosomes.
         return_proportion: bool
             If True read counts are returned instead of proportion of methylated
             cytosines.
@@ -230,7 +230,7 @@ class CytosineCoverageFile(object):
 
         return chromosomes
     
-    def methylation_in_windows(self, window_size:int):
+    def methylation_in_windows(self, window_size:int, chr_labels:list=None):
         """
         Count methylated reads in fixed windows
 
@@ -244,6 +244,9 @@ class CytosineCoverageFile(object):
         ==========
         window_size: int
             Window size in base pairs
+        chr_labels: list of str, probably
+            List of chromosome labels indicating which chromosome to calculate 
+            conversion rate on. Defaults to all chromosomes.
 
         Returns
         =======
@@ -259,7 +262,8 @@ class CytosineCoverageFile(object):
         # Methylation in 150-bp windows
         c2c.methylation_in_windows(150)
         """
-        chr_labels = self.file['chr'].unique()
+        if not chr_labels:
+            chr_labels = self.file['chr'].unique()
 
         reads_over_chromosomes = {}
 
