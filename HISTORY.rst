@@ -2,6 +2,10 @@
 History
 =======
 
+v0.5.0 (13th November 2023)
+---------------------------
+Added ``methylation_state`` to quantify the evidence that regions are unmethylated, CG-only methylated or TE-like methylated.
+
 v0.4.3 (25th October 2023)
 --------------------------
 Added support for checking methylation in windows for only a subset of chromosomes

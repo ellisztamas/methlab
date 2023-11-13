@@ -12,7 +12,7 @@ class CytosineCoverageFile(object):
         Path to a cytosine2coverage-format file from Bismark. This should have
         no header (this will be added), but seven columns giving chromosome,
         base-pair of each cytosine position on the chromosome, strand (+/-), 
-        number of methylated reads, number of unmethylated reads, sequence
+        number of unconverted reads, number of converted reads, sequence
         context (CG, CHG, CHH) and tricnucleotide context (for example, for CHG
         methylation this could be CAG, CCG or CTG).
     
@@ -48,13 +48,13 @@ class CytosineCoverageFile(object):
         """
         file = pd.read_csv(
             self.path, sep="\t",
-            names= ['chr', 'pos', 'strand', 'meth', 'unmethylated', 'context', 'trinucleotide'],
+            names= ['chr', 'pos', 'strand', 'unconverted', 'converted', 'context', 'trinucleotide'],
             dtype={
                 'chr' : 'category',
                 'pos' : 'Int64',
                 'strand': "category",
-                'methylated' : 'Int64',
-                'unmethylated': 'Int64',
+                'unconverted' : 'Int64',
+                'converted': 'Int64',
                 'context': 'category',
                 'trinucleotide' : "category"
             }
@@ -86,21 +86,21 @@ class CytosineCoverageFile(object):
 
     def count_reads(self, data):
         """
-        Helper function to count methylated and unmethylated reads.
+        Helper function to count unconverted and converted reads.
 
         Parameters
         ==========
         data: pd.DataFrame
             A whole or partial coverage file containing at least column headers
-            'context', 'meth' and 'unmethylated'.
+            'context', 'unconverted' and 'converted'.
 
         Returns
         =======
-        Pandas dataframe specifying sequence context, number of methylated and
-        unmethylated reads, and number of cytosines.
+        Pandas dataframe specifying sequence context, number of unconverted and
+        converted reads, and number of cytosines.
         """
         # Read counts and cytosine number in each context
-        mC_read_counts = data.groupby('context').sum(numeric_only = True)[['meth', 'unmethylated']]
+        mC_read_counts = data.groupby('context').sum(numeric_only = True)[['unconverted', 'converted']]
         mC_read_counts['ncytosines'] = data.groupby('context').size()
         # Add a row giving totals
         mC_read_counts.loc['total',:] = mC_read_counts.sum(0).tolist()
@@ -110,9 +110,9 @@ class CytosineCoverageFile(object):
     
     def methylation_over_features(self, chr, start, stop, names= None):
         """
-        Methylated reads across annotated features
+        Converted and unconverted reads across annotated features.
 
-        Counts the number of methylated and unmethylated reads and number of 
+        Counts the number of unconverted and converted reads and number of 
         cytosines in CG, CHG and CHH contexts in each of multiple annotated
         features (e.g. genes, TEs).
 
@@ -134,7 +134,7 @@ class CytosineCoverageFile(object):
         Returns
         =======
         Pandas dataframe specifying feature, sequence context, number of 
-        methylated and unmethylated reads, and number of cytosines.
+        unconverted and converted reads, and number of cytosines.
 
         Example
         =======
@@ -185,13 +185,13 @@ class CytosineCoverageFile(object):
             List of chromosome labels indicating which chromosome to calculate 
             conversion rate on. Defaults to all chromosomes.
         return_proportion: bool
-            If True read counts are returned instead of proportion of methylated
+            If True read counts are returned instead of proportion of unconverted
             cytosines.
 
         Returns
         =======
         Pandas dataframe specifying chromosome, sequence context, proportion of
-        methylated and unmethylated cytosines, and number of cytosines. If 
+        unconverted and converted cytosines, and number of cytosines. If 
         `return_counts` is `True`, read counts are returned instead of
         proportions.
 
@@ -222,19 +222,19 @@ class CytosineCoverageFile(object):
         chromosomes = pd.concat(chromosomes).reset_index()
         chromosomes = chromosomes.rename(columns={'level_0': 'id'})
         
-        # Convert to proportion methylated
+        # Convert to proportion unconverted
         if return_proportion:
-            chromosomes['n_reads']      = chromosomes['meth'] + chromosomes['unmethylated']
-            chromosomes['meth']         = chromosomes['meth'].astype(float)         / chromosomes['n_reads']
-            chromosomes['unmethylated'] = chromosomes['unmethylated'].astype(float) / chromosomes['n_reads']
+            chromosomes['n_reads']      = chromosomes['unconverted'] + chromosomes['converted']
+            chromosomes['unconverted']         = chromosomes['unconverted'].astype(float)         / chromosomes['n_reads']
+            chromosomes['converted'] = chromosomes['converted'].astype(float) / chromosomes['n_reads']
 
         return chromosomes
     
     def methylation_in_windows(self, window_size:int, chr_labels:list=None):
         """
-        Count methylated reads in fixed windows
+        Count unconverted and converted reads in fixed windows
 
-        Counts the number of methylated and unmethylated reads and number of 
+        Counts the number of unconverted and converted reads and number of 
         cytosines in CG, CHG and CHH contexts in windows of fixed size across the
         genome.
 
@@ -251,7 +251,7 @@ class CytosineCoverageFile(object):
         Returns
         =======
         Pandas dataframe giving chromosome label, start position of the window,
-        sequence context, number of methylated and unmethylated reads, and total
+        sequence context, number of unconverted and converted reads, and total
         number of cytosines.
 
         Example

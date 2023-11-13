@@ -1,14 +1,14 @@
 import pandas as pd
 import pytest
 
-from epiclinestools import CytosineCoverageFile
+import epiclinestools as epi
 
 def test_read_CytosineCoverageFile():
     """
     Check reading in a file
     """
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = CytosineCoverageFile(path)
+    c2c = epi.CytosineCoverageFile(path)
     assert c2c.path == path
     assert c2c.file.shape == (10260, 7)
 
@@ -18,7 +18,7 @@ def test_subset():
     stop positions.
     """  
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = CytosineCoverageFile(path)
+    c2c = epi.CytosineCoverageFile(path)
 
     chr = "Chr1"
     start = 1000
@@ -41,7 +41,7 @@ def test_methylation_over_features():
         ).iloc[1:9] # Skip the first row, because it defines the whole chromosome
     
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = CytosineCoverageFile(path)
+    c2c = epi.CytosineCoverageFile(path)
     
     meth_counts = c2c.methylation_over_features(
         chr = gff_file['seqid'],
@@ -68,7 +68,7 @@ def test_conversion_rate():
     To do: test with another coverage file that has more than one chromosome!
     """
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = CytosineCoverageFile(path)
+    c2c = epi.CytosineCoverageFile(path)
     cr = c2c.conversion_rate()
     assert all( cr['context'].isin(['CG', "CHG", "CHH", "total"]) )
     # Check it returns entries for all chromosomes
@@ -87,7 +87,7 @@ def test_conversion_rate():
     # Commented out because pUC19 has zero reads at all and returns NaN
     # Need to decide how to handle that.
     # assert all( 
-    #     cr['meth'] + cr['unmethylated'] == 1
+    #     cr['unconverted'] + cr['converted'] == 1
     #     )
     
     # Check return_proportion gives counts
@@ -98,7 +98,7 @@ def test_conversion_rate():
     # Commented out because pUC19 has zero reads at all and returns NaN
     # Need to decide how to handle that.
     # assert all(
-    #     cr2['meth'] + cr2['unmethylated'] > 1
+    #     cr2['unconverted'] + cr2['converted'] > 1
     # )
 
 def test_count_reads():
@@ -106,12 +106,12 @@ def test_count_reads():
     Check that count_reads does the totals properly.
     """
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = CytosineCoverageFile(path)
+    c2c = epi.CytosineCoverageFile(path)
 
     counts = c2c.count_reads(c2c.file)
 
-    assert counts.iloc[0:3]['meth'].sum() == counts.iloc[3]['meth']
-    assert counts.iloc[0:3]['unmethylated'].sum() == counts.iloc[3]['unmethylated']
+    assert counts.iloc[0:3]['unconverted'].sum() == counts.iloc[3]['unconverted']
+    assert counts.iloc[0:3]['converted'].sum() == counts.iloc[3]['converted']
     assert counts.iloc[0:3]['ncytosines'].sum() == counts.iloc[3]['ncytosines']
 
 def test_methylation_in_windows():
@@ -119,7 +119,7 @@ def test_methylation_in_windows():
     Check basic functionalty of methylat_in_windows.
     """
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = CytosineCoverageFile(path)
+    c2c = epi.CytosineCoverageFile(path)
     
     mc_windows = c2c.methylation_in_windows(1000)
     assert len(mc_windows['chr'].unique()) == 9
