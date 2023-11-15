@@ -120,7 +120,6 @@ def methylation_state(read_counts:pd.DataFrame, ab_errors:tuple, return_probabil
                 state_likelihoods['TE-like']
                 ]),
                 axis=0)
-        print(max_ix)
         output['call'] = [ ['unmethylated', 'CG-only', "TE-like"][i] for i in max_ix ]
 
     return(output)
