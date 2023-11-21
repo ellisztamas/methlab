@@ -1,1 +1,1 @@
-"""Unit test package for epiclinestools."""
+"""Unit test package for methlab."""

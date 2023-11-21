@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from epiclinestools.BismarkSam import *
+from methlab.BismarkSam import *
 
 sam = read_SAM("tests/test_data/chloroplast.sam") # Example with no YS tags
 strandID=read_SAM("tests/test_data/strandID.sam") # example with YS tags.

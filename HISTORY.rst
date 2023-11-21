@@ -2,6 +2,10 @@
 History
 =======
 
+v0.6.0 (21st November 2023)
+---------------------------
+Changed the package name to methlab.
+
 v0.5.0 (13th November 2023)
 ---------------------------
 Added ``methylation_state`` to quantify the evidence that regions are unmethylated, CG-only methylated or TE-like methylated.

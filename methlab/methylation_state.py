@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import beta, binom
-from epiclinestools._alogsumexp import alogsumexp
+from methlab._alogsumexp import alogsumexp
 
 def methylation_state(read_counts:pd.DataFrame, ab_errors:tuple, return_probabilities:bool=False, hard_calls:bool=False):
     """
@@ -108,18 +108,20 @@ def methylation_state(read_counts:pd.DataFrame, ab_errors:tuple, return_probabil
         state_likelihoods = { k : np.exp(v - row_sums) for k,v in state_likelihoods.items() }
     
     # Output file with only IDs and coverage
-    output = read_counts.loc[read_counts['context'] == "total"][['id', 'coverage']].reset_index()
+    output = read_counts.loc[read_counts['context'] == "total"][['id', 'ncytosines', 'coverage', 'theta']].reset_index()
     output = pd.concat([output, pd.DataFrame(state_likelihoods)], axis =1)
     output = output.drop(['index'], axis=1)
 
+    # Make a call about methylation status
     if hard_calls:
-        max_ix = np.argmax(
-            np.array([
-                state_likelihoods['unmethylated'],
-                state_likelihoods['CG-only'],
-                state_likelihoods['TE-like']
-                ]),
-                axis=0)
-        output['call'] = [ ['unmethylated', 'CG-only', "TE-like"][i] for i in max_ix ]
+        a = np.array([
+            state_likelihoods['unmethylated'],
+            state_likelihoods['CG-only'],
+            state_likelihoods['TE-like']
+        ]).T
+        max_ix = np.argmax(a, axis =1) + 1
+        max_ix[np.isnan(a).sum(axis=1) == 3] = 0
+
+        output['call'] = [ ['NA', 'unmethylated', 'CG-only', "TE-like"][i] for i in max_ix ]
 
     return(output)

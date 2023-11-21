@@ -41,7 +41,7 @@ Sample GFF file.
 This is the first 10 lines of the TAIR10 annotation, created thus:
 
 ```
-head /groups/nordborg/common_data/TAIR10/TAIR10_gff3/TAIR10_GFF3_genes_transposons.gff > /groups/nordborg/projects/epiclines/001.library/epiclinestools/tests/test_data/test_TAIR10_GFF3_genes_transposons.gff
+head /groups/nordborg/common_data/TAIR10/TAIR10_gff3/TAIR10_GFF3_genes_transposons.gff > /groups/nordborg/projects/epiclines/001.library/methlab/tests/test_data/test_TAIR10_GFF3_genes_transposons.gff
 ```
 
 ## gene_read_counts.csv

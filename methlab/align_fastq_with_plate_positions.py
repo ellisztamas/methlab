@@ -18,7 +18,7 @@ def import_index_set(index_set:str):
 
     Import a data frame giving positions and sequences of a set of adapater
     indices. These can be from a set of files stored internally in the 
-    epiclinestools package, or from a path to an external file.
+    methlab package, or from a path to an external file.
 
     The full list of adapters at the VBC NGS facility is given on the forskalle
     portal: https://ngs.vbcf.ac.at/forskalle3/account/adaptors
@@ -51,7 +51,7 @@ def import_index_set(index_set:str):
     }
 
     if index_set in ['nordborg', 'dualxt']:
-        pkg = importlib_resources.files("epiclinestools")
+        pkg = importlib_resources.files("methlab")
         adapter_indices = pd.read_csv(pkg/"data"/package_index_sets[index_set])
     else:
         adapter_indices = pd.read_csv(index_set)

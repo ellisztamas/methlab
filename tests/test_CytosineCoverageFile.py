@@ -1,14 +1,13 @@
 import pandas as pd
 import pytest
 
-import epiclinestools as epi
-
+import methlab as ml
 def test_read_CytosineCoverageFile():
     """
     Check reading in a file
     """
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = epi.CytosineCoverageFile(path)
+    c2c = ml.CytosineCoverageFile(path)
     assert c2c.path == path
     assert c2c.file.shape == (10260, 7)
 
@@ -18,7 +17,7 @@ def test_subset():
     stop positions.
     """  
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = epi.CytosineCoverageFile(path)
+    c2c = ml.CytosineCoverageFile(path)
 
     chr = "Chr1"
     start = 1000
@@ -41,7 +40,7 @@ def test_methylation_over_features():
         ).iloc[1:9] # Skip the first row, because it defines the whole chromosome
     
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = epi.CytosineCoverageFile(path)
+    c2c = ml.CytosineCoverageFile(path)
     
     meth_counts = c2c.methylation_over_features(
         chr = gff_file['seqid'],
@@ -68,7 +67,7 @@ def test_conversion_rate():
     To do: test with another coverage file that has more than one chromosome!
     """
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = epi.CytosineCoverageFile(path)
+    c2c = ml.CytosineCoverageFile(path)
     cr = c2c.conversion_rate()
     assert all( cr['context'].isin(['CG', "CHG", "CHH", "total"]) )
     # Check it returns entries for all chromosomes
@@ -106,7 +105,7 @@ def test_count_reads():
     Check that count_reads does the totals properly.
     """
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = epi.CytosineCoverageFile(path)
+    c2c = ml.CytosineCoverageFile(path)
 
     counts = c2c.count_reads(c2c.file)
 
@@ -119,7 +118,7 @@ def test_methylation_in_windows():
     Check basic functionalty of methylat_in_windows.
     """
     path="tests/test_data/test_coverage2cytosine.txt.gz"
-    c2c = epi.CytosineCoverageFile(path)
+    c2c = ml.CytosineCoverageFile(path)
     
     mc_windows = c2c.methylation_in_windows(1000)
     assert len(mc_windows['chr'].unique()) == 9

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-"""Tests for `epiclinestools` package."""
+"""Tests for `methlab` package."""
 
 import pytest
 
 
-from epiclinestools import align_fastq_with_plate_positions
+from methlab import align_fastq_with_plate_positions
 
 
 @pytest.fixture

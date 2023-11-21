@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# epiclinestools documentation build configuration file, created by
+# methlab documentation build configuration file, created by
 # sphinx-quickstart on Fri Jun  9 13:47:02 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -21,12 +21,12 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
-import epiclinestools
+import methlab
 
 
 # -- Project information -----------------------------------------------------
 
-project = "epiclines tools"
+project = "methlab"
 copyright = "2023 Tom Ellis"
 author = "Tom Ellis"
 

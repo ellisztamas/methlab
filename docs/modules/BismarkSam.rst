@@ -15,7 +15,7 @@ Bismark.
 
 .. code-block:: python
 
-    from epiclinestools.BismarkSam import *
+    from methlab.BismarkSam import *
     path = "tests/test_data/chloroplast.sam"
     sam = read_SAM(path)
 

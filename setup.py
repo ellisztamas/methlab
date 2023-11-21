@@ -47,22 +47,22 @@ setup(
     description="Python tools for the epiclines ERC project",
     entry_points={
         'console_scripts': [
-            'align_filenames=epiclinestools.cli:align',
+            'align_filenames=methlab.cli:align',
         ],
     },
     install_requires=['pandas', 'numpy'],
     license="MIT license",
     #long_description=readme + '\n\n' + history,
-    keywords='epiclinestools',
-    name='epiclinestools',
-    packages=find_packages(include=['epiclinestools', 'epiclinestools.*']),
+    keywords='methlab',
+    name='methlab',
+    packages=find_packages(include=['methlab', 'methlab.*']),
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/ellisztamas/epiclinestools',
+    url='https://github.com/ellisztamas/methlab',
     zip_safe=False,
     include_package_data=True,
-    version=get_version("epiclinestools/__init__.py"),
+    version=get_version("methlab/__init__.py"),
     package_data={
-        "epiclinestools": ["data/*.csv"]
+        "methlab": ["data/*.csv"]
     }
 )

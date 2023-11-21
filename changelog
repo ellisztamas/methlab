@@ -1,4 +1,4 @@
-# epiclinestools
+# methlab
 
 ## A class for disecting allc files
 
@@ -19,7 +19,7 @@ Added test data and a test file.
 
 Updated to v0.2.2
 
-## Renamed to epiclinestools to conform to Python standards
+## Renamed to methlab to conform to Python standards
 
 20th July 2023
 
@@ -35,11 +35,11 @@ new file:   HISTORY.rst
 new file:   LICENSE
 new file:   MANIFEST.in
 new file:   README.rst
-new file:   epiclines_tools/align_fastq_with_plate_positions.py
-new file:   epiclines_tools/data/nordborg_nextera_index_sets.csv
-new file:   epiclines_tools/data/plate_2022-007.csv
-new file:   epiclines_tools/data/unique_nextera_dual_xt.csv
+new file:   methlab/align_fastq_with_plate_positions.py
+new file:   methlab/data/nordborg_nextera_index_sets.csv
+new file:   methlab/data/plate_2022-007.csv
+new file:   methlab/data/unique_nextera_dual_xt.csv
 new file:   setup.cfg
 new file:   setup.py
 new file:   tests/test_align_fastq_with_plate_positions.py
-new file:   tests/test_epiclines_tools.py
+new file:   tests/test_methlab.py

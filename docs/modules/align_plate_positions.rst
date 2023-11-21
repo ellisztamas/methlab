@@ -46,7 +46,7 @@ not always look like the ones above. In this case at least you can see:
 Work out which file is which
 ============================
 
-With ``epiclinestools``
+With ``methlab``
 =======================
 
 From the previous section it is clear that if you know the 16-nucleotide adapter
@@ -64,8 +64,8 @@ corresponding to forward and reverse read pairs for each sample.
     import pandas as pd
     from glob import glob
     import os
-    import epiclines_tools as epi
-    print("Using epiclines version " + epi.__version__)
+    import methlab as ml
+    print("Using methlab version " + ml.__version__)
     # List of fastq files
     input_files=glob("path/to/bam_files/*fastq")
 
@@ -85,7 +85,7 @@ sample names will look something like ``t4_p2_G1``.
 
 .. code-block:: python
 
-    epi.align_fastq_with_plate_positions(
+    ml.align_fastq_with_plate_positions(
         input_files,
         adapter_indices = 'nordborg', # specify that we need the Nordborg group custom nextera indices
         prefix = "t4_p2_"

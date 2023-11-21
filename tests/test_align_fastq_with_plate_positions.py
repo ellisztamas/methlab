@@ -1,7 +1,6 @@
 import pandas as pd
 
-import epiclinestools as epi
-
+import methlab as ml
 file_list = [
     'H3H7YDRXY_1#144456_ACTCGCTAAAGGCTAT.fastq.gz',
     'H3H7YDRXY_1#144456_ACTCGCTACCTAGAGT.fastq.gz',
@@ -18,8 +17,8 @@ class Test_align_fastq_with_plate_positions:
         """
         Test align_fastq_with_plate_positions with external data.
         """
-        index_sets = "epiclinestools/data/nordborg_nextera_index_sets.csv"
-        x = epi.align_fastq_with_plate_positions(file_list, index_sets, "test")
+        index_sets = "methlab/data/nordborg_nextera_index_sets.csv"
+        x = ml.align_fastq_with_plate_positions(file_list, index_sets, "test")
         assert isinstance(x, pd.DataFrame)
         assert x.shape[0] == 3
         assert all( x.keys() == ['sample', 'fastq_1', 'fastq_2'])
@@ -28,7 +27,7 @@ class Test_align_fastq_with_plate_positions:
         """
         Test align_fastq_with_plate_positions with internal data.
         """
-        x = epi.align_fastq_with_plate_positions(file_list, 'nordborg', "test")
+        x = ml.align_fastq_with_plate_positions(file_list, 'nordborg', "test")
         assert isinstance(x, pd.DataFrame)
         assert x.shape[0] == 3
         assert all( x.keys() == ['sample', 'fastq_1', 'fastq_2'])
@@ -38,7 +37,7 @@ class Test_align_fastq_with_plate_positions:
         confirm that the output gives files in the right order, even if the input does not
         """
         wonky_file_list = [file_list[i] for i in [3,4,5,0,1,2]]
-        x = epi.align_fastq_with_plate_positions(
+        x = ml.align_fastq_with_plate_positions(
             wonky_file_list,
             'nordborg',
             "test"

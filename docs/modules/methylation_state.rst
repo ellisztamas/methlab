@@ -51,8 +51,7 @@ This code imports an example file from the output of `CytosineCoverageFile.methy
 .. code-block:: python
 
     import pandas as pd
-    import epiclinestools as epi
-
+    import methlab as ml
     read_counts = pd.read_csv("tests/test_data/gene_read_counts.csv")
     # Subset to include only rows showing total counts for all cytosines
     read_counts = read_counts.loc[read_counts['context'] == "total"]
@@ -74,7 +73,7 @@ You might want to include those as weights.
 
 .. code-block:: python
     
-    ab_errors = epi.estimate_beta_parameters(mu, sigma)
+    ab_errors = ml.estimate_beta_parameters(mu, sigma)
 
 It returns a tuple of two numbers corresponding to the *a* and *b* parameters.
 
@@ -85,13 +84,13 @@ We can use the table of read counts and the shape of the beta distribution to ca
 
 .. code-block:: python
 
-    epi.methylation_state(read_counts, ab_errors)
+    ml.methylation_state(read_counts, ab_errors)
 
 Here is the output as a Pandas dataframe:
 
 .. parsed-literal:: 
 
-          id  coverage  unmethylated    CG-only    TE-like
+              id  coverage  unmethylated    CG-only    TE-like
     0  AT1G01010       746     -5.562562  -5.935396  -8.910764
     1  AT1G01020       840     -4.486843  -5.526963  -9.010684
     2  AT1G01030       882     -4.962632  -6.173149  -9.211579

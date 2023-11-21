@@ -19,8 +19,7 @@ this could be CAG, CCG or CTG).
 
 .. code-block:: python
 
-    import epiclinestools as epi
-    path="tests/test_data/test_coverage2cytosine.txt.gz"
+    import methlab as ml    path="tests/test_data/test_coverage2cytosine.txt.gz"
     c2c = CytosineCoverageFile(path)
     # Access the whole file, if you really must (it's big!)
     c2c.file
