@@ -12,7 +12,7 @@ To install methlab, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install git+https://github.com/ellisztamas/methlab.git#egg=argh
+    $ pip install methlab
 
 This is the preferred method to install methlab, as it will always install the most recent stable release.
 
@@ -38,7 +38,7 @@ Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl -OJL https://github.com/ellisztamas/methlab/tarball/master
+    $ curl -OJL https://github.com/ellisztamas/methlab/tarball/main
 
 Once you have a copy of the source, you can install it with:
 
@@ -48,4 +48,4 @@ Once you have a copy of the source, you can install it with:
 
 
 .. _Github repo: https://github.com/ellisztamas/methlab
-.. _tarball: https://github.com/ellisztamas/methlab/tarball/master
+.. _tarball: https://github.com/ellisztamas/methlab/tarball/main

@@ -7,9 +7,10 @@ of the Epiclines ERC project awarded to Magnus Nordborg at the Gregor Mendel
 Institute in Vienna.It was designed primarily for internal use and may well make
 no sense at all to anyone outside the group.
 
-If you do manage to use ``methlab`` in your work please cite::
-   Ellis, Thomas James (2023), "methlab: A Python package for bisulphite-data analysis",
-   Available: https://github.com/ellisztamas/methlab
+If you do manage to use ``methlab`` in your work please cite:
+
+   Ellis, Thomas James (2023), "methlab: A Python package for DNA-methylation analysis",
+   URL: https://github.com/ellisztamas/methlab
 
 .. toctree::
    :maxdepth: 1

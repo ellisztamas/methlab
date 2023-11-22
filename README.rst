@@ -23,7 +23,7 @@ To install methlab, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install git+https://github.com/ellisztamas/methlab.git#egg=argh
+    $ pip install methlab
 
 This is the preferred method to install methlab, as it will always install the most recent stable release.
 
