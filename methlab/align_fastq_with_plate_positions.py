@@ -140,5 +140,8 @@ def align_fastq_with_plate_positions(input_files:list, adapter_indices:str, pref
 
     # Export as a data frame.
     sample_sheet = pd.DataFrame(sample_sheet, columns = ['sample','fastq_1','fastq_2'])
+    # Add rows and columns as separate columns
+    sample_sheet.insert(0, 'col', sample_sheet['sample'].str[1:])
+    sample_sheet.insert(0, 'row', sample_sheet['sample'].str[0])    
     
     return sample_sheet.sort_values('sample')

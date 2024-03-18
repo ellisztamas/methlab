@@ -21,7 +21,7 @@ class Test_align_fastq_with_plate_positions:
         x = ml.align_fastq_with_plate_positions(file_list, index_sets, "test")
         assert isinstance(x, pd.DataFrame)
         assert x.shape[0] == 3
-        assert all( x.keys() == ['sample', 'fastq_1', 'fastq_2'])
+        assert all( x.keys() == ['row', 'col', 'sample', 'fastq_1', 'fastq_2'])
     
     def test_with_internal_file(self):
         """
@@ -30,7 +30,7 @@ class Test_align_fastq_with_plate_positions:
         x = ml.align_fastq_with_plate_positions(file_list, 'nordborg', "test")
         assert isinstance(x, pd.DataFrame)
         assert x.shape[0] == 3
-        assert all( x.keys() == ['sample', 'fastq_1', 'fastq_2'])
+        assert all( x.keys() == ['row', 'col', 'sample', 'fastq_1', 'fastq_2'])
 
     def test_correct_order(self):
         """
