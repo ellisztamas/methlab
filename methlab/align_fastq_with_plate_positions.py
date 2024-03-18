@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 import numpy as np
+import os
 
 import sys
 
@@ -104,7 +105,7 @@ def align_fastq_with_plate_positions(input_files:list, adapter_indices:str, pref
     # For each fastq file, find the position of the matching adapter sequence in the adapter indices.
     ix = []
     for path_name in input_files:
-        input_adapter_sequence = re.findall('[ACTG]+', path_name)[0]
+        input_adapter_sequence = re.findall('[ACTG]+', os.path.basename(path_name))[0]
         row_number = np.where(
             adapter_indices['seq_combined'].str.match(input_adapter_sequence)
             )[0][0]

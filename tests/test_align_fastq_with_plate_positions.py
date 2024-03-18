@@ -1,6 +1,6 @@
 import pandas as pd
-
 import methlab as ml
+
 file_list = [
     'H3H7YDRXY_1#144456_ACTCGCTAAAGGCTAT.fastq.gz',
     'H3H7YDRXY_1#144456_ACTCGCTACCTAGAGT.fastq.gz',
