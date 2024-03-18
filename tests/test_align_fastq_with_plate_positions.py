@@ -1,50 +1,69 @@
 import pandas as pd
 import methlab as ml
+import pytest
 
-file_list = [
-    'H3H7YDRXY_1#144456_ACTCGCTAAAGGCTAT.fastq.gz',
-    'H3H7YDRXY_1#144456_ACTCGCTACCTAGAGT.fastq.gz',
-    'H3H7YDRXY_1#144456_ACTCGCTACGTCTAAT.fastq.gz',
-    'H3H7YDRXY_2#144456_ACTCGCTAAAGGCTAT.fastq.gz',
-    'H3H7YDRXY_2#144456_ACTCGCTACCTAGAGT.fastq.gz',
-    'H3H7YDRXY_2#144456_ACTCGCTACGTCTAAT.fastq.gz'
+mate1 = [
+    '/long/path/282462_TTCTCGTGCAATACACAGAG_S23_R1_001.fastq.gz',
+    '/long/path/282462_TCGTGCATTCGCGTTGGTAT_S5_R1_001.fastq.gz',
+    '/long/path/282462_GCCTAACGTGAGCTCTCAAG_S62_R1_001.fastq.gz',
+    '/long/path/282462_CATTCACGCTGTTGTACTCA_S26_R1_001.fastq.gz',
+    '/long/path/282462_GCCATATAACACACAATATC_S81_R1_001.fastq.gz',
+    '/long/path/282462_AACCAGCCACGCCACAGCAC_S60_R1_001.fastq.gz'
+]
+mate2 = [
+    '/long/path/282462_TTCTCGTGCAATACACAGAG_S23_R2_001.fastq.gz',
+    '/long/path/282462_TCGTGCATTCGCGTTGGTAT_S5_R2_001.fastq.gz',
+    '/long/path/282462_GCCTAACGTGAGCTCTCAAG_S62_R2_001.fastq.gz',
+    '/long/path/282462_CATTCACGCTGTTGTACTCA_S26_R2_001.fastq.gz',
+    '/long/path/282462_GCCATATAACACACAATATC_S81_R2_001.fastq.gz',
+    '/long/path/282462_AACCAGCCACGCCACAGCAC_S60_R2_001.fastq.gz'
 ]
 
+# Example of a sample sheet giving indices 
+sample_sheet = pd.read_csv("tests/test_data/NGS_sample_sheet.csv")
 
 class Test_align_fastq_with_plate_positions:
 
     def test_with_external_file(self):
         """
-        Test align_fastq_with_plate_positions with external data.
+        Test that align_fastq_with_plate_positions gives the correct fastq files.
         """
-        index_sets = "methlab/data/nordborg_nextera_index_sets.csv"
-        x = ml.align_fastq_with_plate_positions(file_list, index_sets, "test")
-        assert isinstance(x, pd.DataFrame)
-        assert x.shape[0] == 3
-        assert all( x.keys() == ['sample', 'fastq_1', 'fastq_2'])
+        new_sheet = ml.align_fastq_with_plate_positions(mate1, mate2, sample_sheet)
+        # Check the indices appear in the filenames
+        assert all(
+            [ new_sheet.iloc[i]['index1'] in new_sheet.iloc[i]['fastq1'] for i in range(new_sheet.shape[0]) ]
+        )
+        assert all(
+            [ new_sheet.iloc[i]['index2'] in new_sheet.iloc[i]['fastq1'] for i in range(new_sheet.shape[0]) ]
+        )
     
-    def test_with_internal_file(self):
-        """
-        Test align_fastq_with_plate_positions with internal data.
-        """
-        x = ml.align_fastq_with_plate_positions(file_list, 'nordborg', "test")
-        assert isinstance(x, pd.DataFrame)
-        assert x.shape[0] == 3
-        assert all( x.keys() == ['sample', 'fastq_1', 'fastq_2'])
-
     def test_correct_order(self):
         """
-        confirm that the output gives files in the right order, even if the input does not
+        confirm that the output gives files in the right order, even if the input is not
         """
-        wonky_file_list = [file_list[i] for i in [3,4,5,0,1,2]]
-        x = ml.align_fastq_with_plate_positions(
-            wonky_file_list,
-            'nordborg',
-            "test"
-            )
-        fastq1 = x['fastq_1'].tolist()
-        fastq2 = x['fastq_2'].tolist()
-
+        shuffled_mate1 = [mate1[i] for i in [3,4,5,0,1,2]]
+        shuffled_mate2 = [mate2[i] for i in [2,5,3,4,1,0]]
+        new_sheet = ml.align_fastq_with_plate_positions(shuffled_mate1, shuffled_mate2, sample_sheet)
+        # Check the indices appear in the filenames
         assert all(
-            [ fastq1[i][10] < fastq2[i][10] for i in [0,1,2] ]
+            [ new_sheet.iloc[i]['index1'] in new_sheet.iloc[i]['fastq1'] for i in range(new_sheet.shape[0]) ]
         )
+        assert all(
+            [ new_sheet.iloc[i]['index2'] in new_sheet.iloc[i]['fastq1'] for i in range(new_sheet.shape[0]) ]
+        )
+
+    def test_lists_are_different_lengths(self):
+        with pytest.raises(Exception):
+            ml.align_fastq_with_plate_positions(mate1, mate2[:3], sample_sheet)
+
+    def test_catch_duplicate_indices(self):
+        """
+        Test that a warning is raised if one or more pairs of input files contain
+        the same indices.
+        """
+        with pytest.warns(UserWarning):
+            ml.align_fastq_with_plate_positions(
+                mate1 + [mate1[0]],
+                mate2 + [mate2[0]],
+                sample_sheet
+                )
