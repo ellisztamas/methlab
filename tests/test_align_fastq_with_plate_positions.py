@@ -24,7 +24,7 @@ sample_sheet = pd.read_csv("tests/test_data/NGS_sample_sheet.csv")
 
 class Test_align_fastq_with_plate_positions:
 
-    def test_with_external_file(self):
+    def test_indices_match_filenames(self):
         """
         Test that align_fastq_with_plate_positions gives the correct fastq files.
         """
