@@ -21,4 +21,3 @@ If you do manage to use ``methlab`` in your work please cite:
    modules/CytosineCoverageFile.rst
    modules/BismarkSam.rst
    modules/methylation_state.rst
-   history

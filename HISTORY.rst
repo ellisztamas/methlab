@@ -2,6 +2,25 @@
 History
 =======
 
+v0.8.0 (8th May 2024)
+---------------------
+Added IBD painting
+
+Added a Class to calculate pairwise distance between a sample to test
+and all individuals in a reference panel to confirm the input is the
+genotype you think it is.
+
+ibdpainting.py contains class VcfDistance to import two VCF files, check
+they are compatible and keep the sample names, chromosome labels, SNP
+positions and genotype information.
+
+VcfDistance.split_into_windows divides chromosomes up into windows of
+fixed length and returns a dictionary of new VcfDistance objects.
+
+VcfDistance.pairwise_distance calculates the pairwise distance from the
+input individual to all referencs samples.
+
+
 v0.6.0 (21st November 2023)
 ---------------------------
 Changed the package name to methlab.
