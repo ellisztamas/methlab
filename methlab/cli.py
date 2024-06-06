@@ -3,6 +3,11 @@ from align_fastq_with_plate_positions import align_fastq_with_plate_positions
 import argparse
 import sys
 
+# https://betterprogramming.pub/build-your-python-script-into-a-command-line-tool-f0817e7cebda
+
+Create a subparser
+add it to main()
+
 def align(input_files, adapter_indices, prefix=""):
     """
     """

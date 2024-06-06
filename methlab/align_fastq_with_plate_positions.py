@@ -43,29 +43,31 @@ def align_fastq_with_plate_positions(
     # Check mate1 and mate2 are the same length
     if len(mate1) != len(mate2):
         raise ValueError("mate1 and mate2 are not the same length.")
+    if len(mate1) == 0:
+        raise ValueError("List of fastq files is empty!")
     # Check column headers
     check_col_names = all([col_name in sample_sheet.keys() for col_name in ['index1', 'index2'] ])
     if not check_col_names:
         raise ValueError("`sample_sheet` should contain at least the headers 'index1' and 'index2'")
 
     # Merge adapters into a single sequence.
-    sample_sheet['seq_combined'] = sample_sheet['index1'] + sample_sheet['index2']
+    sample_sheet['combined_indices'] = sample_sheet.loc[:,'index1'] + sample_sheet.loc[:,'index2']
 
     # Dataframe with a row for each input file giving the two indices pasted
     # together, with both full paths
     input_files_df = pd.DataFrame({
         # Pull the indices from the 
-        'seq_combined' : [re.findall('[ACTG]{8,}', os.path.basename(path_name))[0] for path_name in mate1],
+        'combined_indices' : [re.findall('[ACTG]{8,}', os.path.basename(path_name))[0] for path_name in mate1],
         'fastq1' : mate1,
         'fastq2' : mate2
     })
 
-    duplicate_indices = input_files_df['seq_combined'].duplicated()
+    duplicate_indices = input_files_df['combined_indices'].duplicated()
     if any(duplicate_indices):
         warn(
             UserWarning("One or more pairs of input files have duplicated indices.")
         )
 
-    sample_sheet = sample_sheet.merge(input_files_df, how='left', on='seq_combined')
+    sample_sheet = sample_sheet.merge(input_files_df, how='left', on='combined_indices')
 
     return sample_sheet

@@ -56,6 +56,10 @@ class Test_align_fastq_with_plate_positions:
         with pytest.raises(Exception):
             ml.align_fastq_with_plate_positions(mate1, mate2[:3], sample_sheet)
 
+    def test_lists_empty(self):
+        with pytest.raises(Exception):
+            ml.align_fastq_with_plate_positions([], [], sample_sheet)
+
     def test_catch_duplicate_indices(self):
         """
         Test that a warning is raised if one or more pairs of input files contain

@@ -4,6 +4,7 @@ History
 
 v0.8.0 (8th May 2024)
 ---------------------
+
 Added IBD painting
 
 Added a Class to calculate pairwise distance between a sample to test
