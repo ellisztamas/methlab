@@ -65,7 +65,7 @@ class Test_align_fastq_with_plate_positions:
         Test that a warning is raised if one or more pairs of input files contain
         the same indices.
         """
-        with pytest.warns(UserWarning):
+        with pytest.raises(Exception):
             ml.align_fastq_with_plate_positions(
                 mate1 + [mate1[0]],
                 mate2 + [mate2[0]],

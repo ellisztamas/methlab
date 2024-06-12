@@ -53,21 +53,26 @@ def align_fastq_with_plate_positions(
     # Merge adapters into a single sequence.
     sample_sheet['combined_indices'] = sample_sheet.loc[:,'index1'] + sample_sheet.loc[:,'index2']
 
-    # Dataframe with a row for each input file giving the two indices pasted
-    # together, with both full paths
-    input_files_df = pd.DataFrame({
+    # Dataframes giving indices and paths to input files for mates 1 and 2.
+    # It is assumed indices are at least 8 nucleotides
+    indices_mate1 = pd.DataFrame({
         # Pull the indices from the 
         'combined_indices' : [re.findall('[ACTG]{8,}', os.path.basename(path_name))[0] for path_name in mate1],
-        'fastq1' : mate1,
+        'fastq1' : mate1
+    })
+    indices_mate2 = pd.DataFrame({
+        # Pull the indices from the 
+        'combined_indices' : [re.findall('[ACTG]{8,}', os.path.basename(path_name))[0] for path_name in mate2],
         'fastq2' : mate2
     })
-
-    duplicate_indices = input_files_df['combined_indices'].duplicated()
-    if any(duplicate_indices):
-        warn(
-            UserWarning("One or more pairs of input files have duplicated indices.")
-        )
-
-    sample_sheet = sample_sheet.merge(input_files_df, how='left', on='combined_indices')
+    # Merge into a single dataframe with an inner join
+    merged_indices_fastq = pd.merge(indices_mate1, indices_mate2, how='inner', on='combined_indices')
+    # Because this is an inner join, if one or more indices do not match between 
+    # mate1 and mate2 then merged_indices_fastq will have fewer rows than the number
+    # of files. Check this.
+    if merged_indices_fastq.shape[0] != len(mate1):
+        raise ValueError("One or more indices is present in mate1 but not mate2, or vice versa")
+    
+    sample_sheet = sample_sheet.merge(merged_indices_fastq, how='left', on='combined_indices')
 
     return sample_sheet

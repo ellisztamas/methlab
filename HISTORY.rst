@@ -2,6 +2,12 @@
 History
 =======
 
+v0.8.1 (12th June 2024)
+-----------------------
+
+Fixed ``align_fastq_with_plate_positions`` to allow for lists on input fastq
+files that are not in the same order.
+
 v0.8.0 (8th May 2024)
 ---------------------
 
