@@ -47,10 +47,10 @@ setup(
     description="Python tools for the epiclines ERC project",
     entry_points={
         'console_scripts': [
-            'align_filenames=methlab.cli:align',
+            'methlab=methlab.cli:main',
         ],
     },
-    install_requires=['pandas', 'numpy'],
+    install_requires=['pandas', 'numpy','plotly','scikit-allel'],
     license="MIT license",
     #long_description=readme + '\n\n' + history,
     keywords='methlab',

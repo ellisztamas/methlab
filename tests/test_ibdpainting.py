@@ -1,9 +1,8 @@
 import numpy as np
-import methlab as ml
 import pytest
 from warnings import warn
 
-from methlab.ibdpainting import import_vcfdistance
+from methlab.ibdpainting import *
 
 input = 'tests/test_data/panel_to_test.vcf.gz'
 reference = 'tests/test_data/reference_panel.vcf.gz'
@@ -16,16 +15,16 @@ def test_import_vcfdistance_gives_right_output():
     out = import_vcfdistance(
         input = input,
         reference = reference,
-        sample_name = '1158_2'
+        sample_name = 'S2.15.002'
     )
-    real_names = np.array(['1158_2', '1158', '6024', '6184', '8249'])
+    real_names = np.array(['S2.15.002', '1158', '6024', '6184', '8249'])
     assert all(
         [ x == y for x,y in zip(out.samples, real_names) ]
     )
 
-    assert len(out.chr) == 551
-    assert len(out.pos) == 551
-    assert out.geno.shape == (551, 5, 2)
+    assert len(out.chr) == 550
+    assert len(out.pos) == 550
+    assert out.geno.shape == (550, 5, 2)
 
 def test_import_vcfdistance_fails_if_missing_sample():
     """
@@ -50,7 +49,7 @@ def test_split_into_windows_functions():
     vcfd = import_vcfdistance(
             input = input,
             reference = reference,
-            sample_name = '1158_2'
+            sample_name = 'S2.15.002'
         )
     split_vcfd = vcfd.split_into_windows(1000)
     assert all( split_vcfd['Chr1:0-1000'].pos >= 0 )
@@ -97,3 +96,30 @@ def test_pairwise_distance_works():
 
     assert check_8249[3] == 0
     assert all(check_8249[:2] > 0)
+
+def test_ibdpainting():
+    ibd = ibd_table(
+        input=reference,
+        reference=reference,
+        sample_name='1158',
+        window_size=1000
+    )
+    # Check the dataframe is the right shape
+    assert ibd.shape == (200, 5)
+    # Check that the column for the true parent is all zeroes or -9
+    assert all(
+        (ibd['1158'] == 0) | (ibd['1158'] == -9)
+    )
+    # Check that a non-parent are not all -9.
+    assert any(ibd['8249'] != 0)
+
+"""
+methlab ibdpainting \
+    --input tests/test_data/reference_panel.vcf.gz \
+    --reference tests/test_data/reference_panel.vcf.gz \
+    --sample_name 1158 \
+    --window_size 1000 \
+    --outdir tests/test_output \
+    --expected_match 1158 \
+    --keep_ibd_table
+"""

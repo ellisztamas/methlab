@@ -2,7 +2,7 @@
 
 __author__ = """Tom Ellis"""
 __email__ = 'thomas.ellis@gmi.oeaw.ac.at'
-__version__ = '0.8.1'
+__version__ = '0.9.0'
 
 # import argparse
 
@@ -11,4 +11,4 @@ from methlab.CytosineCoverageFile import CytosineCoverageFile
 from methlab.BismarkSam import *
 from methlab.methylation_state import methylation_state
 from methlab.estimate_beta_parameters import estimate_beta_parameters
-from methlab.ibdpainting import VcfDistance
+# from methlab.ibdpainting import ibd_table

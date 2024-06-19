@@ -29,9 +29,9 @@ bcftools view \
 
 bcftools view \
     --regions Chr1:1-100000,Chr2:1-100000 \
-    --samples 1158_2,6024_2,6184_1,8249_1,blank_2021-015_A4,Col0_2021-015_F9,F1.23.01,F1.26.03,F2.16.042,F3.03.001 \
+    --samples F2.05.015,S2.06.002,S2.15.002,F2.27.020 \
     --output tests/test_data/panel_to_test.vcf.gz \
-    /groups/nordborg/projects/epiclines/002.pedigree/03_processing/05_validate_genotyping/output/vcf/pedigree_genotype_calls_against_TAIR10.vcf.gz
+    /scratch-cbe/users/thomas.ellis/meth_pedigree/05_validate_genotyping/02_genotype_calls_by_plate/2021-014.vcf.gz
 
 bcftools view \
     --regions Chr1:1-100000 \
