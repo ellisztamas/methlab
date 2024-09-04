@@ -4,14 +4,13 @@ import numpy.ma as ma
 import pandas as pd
 import plotly.express as px
 import allel
-allel.__version__
+import h5py
 
-
-def import_vcfdistance(input, reference, sample_name):
+def load_genotypes(input, reference, sample_name):
     """
-    Import and merge data from VCF files.
+    Import and merge test and reference data files.
 
-    Import VCF files for one or more input samples and a panel of reference samples
+    Import genotype data for one or more input samples and a panel of reference samples
     to compare to. Subset each so that the markers are really identical. Merge the
     arrays of genotype calls so that the data for the input appear first on the
     first axis of the genotype call arrays.
@@ -21,7 +20,7 @@ def import_vcfdistance(input, reference, sample_name):
     input: str
         Path to a VCF file containing genotype data for one or more samples to check
     reference: str
-        Path to a VCF file containing genotype data for a panel of reference individuals
+        Path to a HDF5 file containing genotype data for a panel of reference individuals
         to compare the input indivual against.
     sample_name: str
         Sample name for the individual to check. This must be present in the samples
@@ -29,45 +28,50 @@ def import_vcfdistance(input, reference, sample_name):
 
     Return
     ======
-    An object of class VcfDistance.
+    An object of class geneticDistance.
     """
-    # Read in the VCF files
-    input_vcf = allel.read_vcf(input)
-    ref_vcf   = allel.read_vcf(reference)
+    # Read in the data files
+    input_vcf = allel.read_vcf(input, samples=[sample_name])
+    ref_hdf5  = h5py.File(reference, mode="r")
 
-    if sample_name in input_vcf['samples']:
+    ref_str_data = {
+        'samples' : [ x.decode('utf-8') for x in ref_hdf5['samples'][:] ],
+        'chr'     : [ x.decode('utf-8') for x in ref_hdf5['variants/CHROM'][:] ]
+    }
+
+    if sample_name not in input_vcf['samples']:
+        raise ValueError("The sample name is not in the list of samples in the input VCF file.")
+    else: 
         # Find the position of the individual to test
         sample_ix = np.where(input_vcf['samples'] == sample_name)[0][0]
         # Join vectors of sample names, with the test individual first
         new_samples = np.append(
             input_vcf['samples'][None,sample_ix],
-            ref_vcf['samples']
-            )
-    else:
-        raise ValueError("The sample name is not in the list of samples in the input VCF file.")
+            ref_str_data['samples']
+            )        
 
     # Check that contig labels match
     chr_labels = {
         'input' : np.unique(input_vcf['variants/CHROM']),
-        'ref'   : np.unique(ref_vcf['variants/CHROM'])
+        'ref'   : np.unique(ref_str_data['chr'])
     }
     if len(chr_labels['input']) != len(chr_labels['ref']):
         raise ValueError(
-            "The number of unique contig labels do not match: the input VCF has {}, but the reference VCF has {}.".
+            "The number of unique contig labels do not match: the input VCF has {}, but the reference panel has {}.".
             format( chr_labels['input'], chr_labels['ref'] )
         )
     elif any( chr_labels['input'] != chr_labels['ref'] ):
         raise ValueError(
-            "Contig labels do not match between the input and reference VCF files."
+            "Contig labels do not match between the input and reference files."
         )
     
-    # Make sure we only compare SNPs that are found in both VCF files.
+    # Make sure we only compare SNPs that are found in both datasets.
     # Concatenate chromosome labels and SNP positions
     snp_names = {
         'input' : [ str(chr) + ":" + str(pos) for chr,pos in zip(input_vcf['variants/CHROM'], input_vcf['variants/POS']) ],
-        'ref'   : [ str(chr) + ":" + str(pos) for chr,pos in zip(ref_vcf['variants/CHROM'],   ref_vcf['variants/POS']) ]
+        'ref'   : [ str(chr) + ":" + str(pos) for chr,pos in zip(ref_str_data['chr'],   ref_hdf5['variants/POS'][:]) ]
     }
-    # Find the SNP position names that are common to both VCF files
+    # Find the SNP position names that are common to both datasets
     matching_SNPs_in_both_files = np.intersect1d(
         snp_names['input'],
         snp_names['ref']
@@ -81,22 +85,25 @@ def import_vcfdistance(input, reference, sample_name):
     # Append the genotype data for the test individual to the array of the reference panel
     new_geno = np.concatenate(
         (input_vcf['calldata/GT'][which_SNPs_to_keep['input'], sample_ix][:, np.newaxis],
-        ref_vcf['calldata/GT'][which_SNPs_to_keep['ref']]),
+        ref_hdf5['calldata/GT'][which_SNPs_to_keep['ref']]),
         axis=1
         )
-
-    return VcfDistance(
+    
+    # Define an output before closing the Hdf5 file
+    output = geneticDistance(
         samples = new_samples,
-        chr = ref_vcf['variants/CHROM'][which_SNPs_to_keep['ref']],
-        pos = ref_vcf['variants/POS'][which_SNPs_to_keep['ref']],
+        chr = np.array(ref_str_data['chr'])[np.where(which_SNPs_to_keep['ref'])[0]],
+        pos = ref_hdf5['variants/POS'][:][which_SNPs_to_keep['ref']],
         geno = new_geno
     )
 
+    ref_hdf5.close()
 
-class VcfDistance(object):
+    return output
+
+class geneticDistance(object):
     """
-    A simple class to compare genotype data genetic distances between individuals
-    from a VCF file.  
+    A simple class to compare genotype data genetic distances between individuals.  
 
     Parameters
     ==========
@@ -128,7 +135,7 @@ class VcfDistance(object):
     Methods
     =======
     split_into_windows
-        Split a VcfDistance object into windows.
+        Split a geneticDistance object into windows.
     pairwise_distance
         Calculate pairwise genetic distance between an input individual and all 
         reference individuals.
@@ -142,10 +149,10 @@ class VcfDistance(object):
 
     def split_into_windows(self, window_size: int):
         """
-        Split a VcfDistance object into windows.
+        Split a geneticDistance object into windows.
 
-        Splits the VcfDistance object into chromosomes, then into windows on each
-        chromosome. It returns a dictionary of VcfDistance objects for each window.
+        Splits the geneticDistance object into chromosomes, then into windows on each
+        chromosome. It returns a dictionary of geneticDistance objects for each window.
 
         Parameters
         ==========
@@ -154,11 +161,11 @@ class VcfDistance(object):
 
         Returns
         =======
-        A dictionary of VcfDistance objects with an element for each window.
+        A dictionary of geneticDistance objects with an element for each window.
         Indexes are in the form "Chr:start-stop".
         """
         # Empty dict to store the output
-        list_of_vcfdistance_objects = {}
+        list_of_distance_objects = {}
 
         for chr in np.unique(self.chr):
             # Boolean array indexing items in this chromosome
@@ -172,14 +179,14 @@ class VcfDistance(object):
                 window_ix = (self.pos[chr_ix] >= start) & (self.pos[chr_ix] < stop)
                 # Create an object for each window.
                 window_name = str(chr) + ":" + str(start) + "-" + str(stop)
-                list_of_vcfdistance_objects[window_name] = VcfDistance(
+                list_of_distance_objects[window_name] = geneticDistance(
                         samples = self.samples,
                         chr  = self.chr[chr_ix][window_ix],
                         pos  = self.pos[chr_ix][window_ix],
                         geno = self.geno[chr_ix][window_ix]
                     )
         
-        return list_of_vcfdistance_objects
+        return list_of_distance_objects
     
     def pairwise_distance(self, warn_about_missing_data=False):
         """
@@ -231,7 +238,7 @@ def ibd_table(input:str, reference:str, sample_name:str, window_size:int):
         Path to a VCF file containing genotype data for one or more samples to
         test
     reference: str
-        Path to a VCF file containing genotype data for a panel of reference
+        Path to an HDF5 file containing genotype data for a panel of reference
         individuals to compare the test individual against.
     sample_name: str
         Sample name for the individual to check.
@@ -245,20 +252,20 @@ def ibd_table(input:str, reference:str, sample_name:str, window_size:int):
     sample in the reference panel. Elements show genetic distance between the 
     test individual and each reference individual in a single window.
     """
-    vcfdistance = import_vcfdistance(
+    genetic_distance = load_genotypes(
             input = input,
             reference = reference,
             sample_name = sample_name
         )
     # Divide the genome into windows
-    vcfd_in_windows = vcfdistance.split_into_windows(window_size)
+    distances_in_windows = genetic_distance.split_into_windows(window_size)
 
     # Dataframe with a row for each window across the genome and a column for each sample in the reference panel.
     distance_array = pd.DataFrame(
-        [ v.pairwise_distance() for v in vcfd_in_windows.values() ],
-        columns = vcfdistance.samples[1:]
+        [ v.pairwise_distance() for v in distances_in_windows.values() ],
+        columns = genetic_distance.samples[1:]
     )
-    distance_array.insert(0, 'window', vcfd_in_windows.keys())
+    distance_array.insert(0, 'window', distances_in_windows.keys())
 
     return distance_array
 

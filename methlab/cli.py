@@ -39,7 +39,7 @@ def main():
         help ='Sample name for the individual to check. This must be present in the samples in the input VCF.'
     )
     parser_ibdpainting.add_argument('--reference',
-        help="Path to a VCF file containing genotype data for a panel of reference individuals to compare the input indivual against."
+        help="Path to an HDF5 file containing genotype data for a panel of reference individuals to compare the input indivual against. This should be the output of allel.vcf_to_hdf5()"
     )
     parser_ibdpainting.add_argument('--window_size',
         type=int, default=20000,
@@ -69,4 +69,4 @@ def main():
     args.func(**args_)
 
 if __name__ == '__main__':
-  main()
+    main()
