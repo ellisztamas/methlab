@@ -8,3 +8,4 @@ pytest
 importlib_resources
 plotly
 scikit-allel
+h5py

@@ -50,7 +50,7 @@ setup(
             'methlab=methlab.cli:main',
         ],
     },
-    install_requires=['pandas', 'numpy','plotly','scikit-allel'],
+    install_requires=['pandas', 'numpy','plotly','scikit-allel', 'h5py'],
     license="MIT license",
     #long_description=readme + '\n\n' + history,
     keywords='methlab',
