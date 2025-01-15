@@ -7,3 +7,4 @@ scipy
 pytest
 importlib_resources
 plotly
+scikit-allel
