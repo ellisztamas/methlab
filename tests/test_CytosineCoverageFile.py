@@ -2,6 +2,8 @@ import pandas as pd
 import pytest
 
 import methlab as ml
+
+
 def test_read_CytosineCoverageFile():
     """
     Check reading in a file
