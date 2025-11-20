@@ -1,5 +1,6 @@
 def estimate_beta_parameters(mu, sigma):
-    """Estimate shape parameters of a beta distribution.
+    """
+    Estimate shape parameters of a beta distribution.
 
     Estimate shape parameters a and b of a beta distribution using the mean and
     variance of that distribution by method-of-moments.

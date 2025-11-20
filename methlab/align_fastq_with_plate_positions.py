@@ -1,44 +1,70 @@
 import pandas as pd
 import re
 import os
-from warnings import warn
 
 def align_fastq_with_plate_positions(
-        mate1:list,
-        mate2:list,
-        sample_sheet:pd.DataFrame
-        ):
+    mate1: list,
+    mate2: list,
+    sample_sheet: pd.DataFrame
+):
     """
-    Align raw sequence files with plate positions
+    Align raw sequence files with plate positions.
 
-    align_fastq_with_plate_positions looks up the adapter sequence in a lists of
-    (paired) raw sequence files (usually .fastq.gz) in a data frame of adapter
-    sequences to determine the position (row/column) of the sample in the 
-    sequencing plate.
-
+    This function looks up adapter sequences in lists of (paired) raw sequence 
+    files (usually .fastq.gz) in a DataFrame of adapter sequences to determine 
+    the position (row/column) of the sample in the sequencing plate.
+    
     This relies on grepping a string of only A, T, C or G of at least 8 letters
     from the file name of fastq files (basename only; the longer path is ignored).
     If such a string exists in the file name but is not an index, expect problems.
 
     Parameters
-    ==========
-    mate1: list
+    ----------
+    mate1 : list of str
         List of paths to raw sequence files (usually .fastq.gz) for the first
         mate pairs. These should all be from a single sequencing plate, or else
         there will be multiple matches to each row/column position.
-    mate2: list
-        As for mate1, but for second mate pairs. Matching pairs do not need to
-        be in the same order, but there should be one and only one file name in
-        mate2 with the same index as mate2.
-    sample_sheet: DataFrame
-        Pandas dataframe with a row for each sample giving information about
-        each sample. At a minimum this must contain columns 'index1' and 'index2'
+    mate2 : list of str
+        List of paths to raw sequence files (usually .fastq.gz) for the second
+        mate pairs. Matching pairs do not need to be in the same order, but 
+        there should be one and only one file name in mate2 with the same index 
+        as mate1.
+    sample_sheet : pandas.DataFrame
+        DataFrame with a row for each sample giving information about each 
+        sample. At a minimum this must contain columns 'index1' and 'index2'
         giving the forwards and reverse indices to look up.
 
     Returns
-    =======
-    The original data frame with additional columns 'fastq1' and 'fastq2' giving
-    paths to the fastq files.
+    -------
+    pandas.DataFrame
+        The original DataFrame with additional columns 'fastq1' and 'fastq2' 
+        giving paths to the fastq files.
+
+    Raises
+    ------
+    ValueError
+        If mate1 and mate2 are not the same length.
+    ValueError
+        If the list of fastq files is empty.
+    ValueError
+        If sample_sheet does not contain 'index1' and 'index2' columns.
+    ValueError
+        If one or more indices is present in mate1 but not mate2, or vice versa.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> mate1 = ['sample_ACGTACGT_R1.fastq.gz', 'sample_TGCATGCA_R1.fastq.gz']
+    >>> mate2 = ['sample_ACGTACGT_R2.fastq.gz', 'sample_TGCATGCA_R2.fastq.gz']
+    >>> sample_sheet = pd.DataFrame({
+    ...     'index1': ['ACGT', 'TGCA'],
+    ...     'index2': ['ACGT', 'TGCA'],
+    ...     'sample_id': ['sample1', 'sample2']
+    ... })
+    >>> result = align_fastq_with_plate_positions(mate1, mate2, sample_sheet)
+    >>> 'fastq1' in result.columns and 'fastq2' in result.columns
+    True
+
     """
     # Check mate1 and mate2 are the same length
     if len(mate1) != len(mate2):

@@ -4,34 +4,40 @@ from warnings import warn
 
 class CytosineCoverageFile(object):
     """
-    A class to work with Bismark coverage2cytosine files
+    A class to work with Bismark coverage2cytosine files.
+
+    This class provides methods to read, subset, and analyze cytosine coverage
+    data from Bismark's coverage2cytosine output files.
 
     Parameters
-    ==========
-    path: str
+    ----------
+    path : str
         Path to a cytosine2coverage-format file from Bismark. This should have
         no header (this will be added), but seven columns giving chromosome,
-        base-pair of each cytosine position on the chromosome, strand (+/-), 
+        base-pair of each cytosine position on the chromosome, strand (+/-),
         number of unconverted reads, number of converted reads, sequence
-        context (CG, CHG, CHH) and tricnucleotide context (for example, for CHG
+        context (CG, CHG, CHH) and trinucleotide context (for example, for CHG
         methylation this could be CAG, CCG or CTG).
-    
+
+    Attributes
+    ----------
+    path : str
+        Path to the coverage file.
+    file : pandas.DataFrame
+        The loaded coverage data with columns: 'chr', 'pos', 'strand', 
+        'unconverted', 'converted', 'context', 'trinucleotide'.
+
     Examples
-    ========
-    # Example coverage file
-    path="tests/test_data/test_coverage2cytosine.txt.gz"
-
-    # Load the file into memory
-    c2c = CytosineCoverageFile(path)
-
-    # Subset 10 bp on Chr1
-    chr = "Chr1"
-    start = 3000
-    stop = 3010
-    sub = c2c.subset(chr, start, stop)
-
-
-
+    --------
+    >>> # Example coverage file
+    >>> path = "tests/test_data/test_coverage2cytosine.txt.gz"
+    >>> # Load the file into memory
+    >>> c2c = CytosineCoverageFile(path)
+    >>> # Subset 10 bp on Chr1
+    >>> chr = "Chr1"
+    >>> start = 3000
+    >>> stop = 3010
+    >>> sub = c2c.subset(chr, start, stop)
 
     """
     def __init__(self, path:str):
@@ -42,9 +48,16 @@ class CytosineCoverageFile(object):
         """
         Read in a cytosine2coverage file.
 
-        Load a cytosine2coverage file into memory from the path given in the 
+        Load a cytosine2coverage file into memory from the path given in the
         class instance. If it is compressed (which it probably is) there is no
         need to unzip it; pandas handles this automatically.
+
+        Returns
+        -------
+        pandas.DataFrame
+            DataFrame with columns 'chr', 'pos', 'strand', 'unconverted', 
+            'converted', 'context', and 'trinucleotide'.
+
         """
         file = pd.read_csv(
             self.path, sep="\t",
@@ -66,17 +79,19 @@ class CytosineCoverageFile(object):
         Subset the file based on chromosome, start and stop position.
 
         Parameters
-        ==========
-        chr: str or int
-            Label for the chromosome label.
-        start: int
-            Starting base position
-        stop: stop
-            Stop base position
-        
+        ----------
+        chr : str or int
+            Label for the chromosome.
+        start : int
+            Starting base position.
+        stop : int
+            Stop base position.
+
         Returns
-        =======
-        Pandas dataframe which is a row subset of self.file.
+        -------
+        pandas.DataFrame
+            Row subset of self.file matching the specified genomic region.
+
         """
         return self.file.loc[
             (self.file['chr'] == chr) & 
@@ -89,15 +104,18 @@ class CytosineCoverageFile(object):
         Helper function to count unconverted and converted reads.
 
         Parameters
-        ==========
-        data: pd.DataFrame
+        ----------
+        data : pandas.DataFrame
             A whole or partial coverage file containing at least column headers
             'context', 'unconverted' and 'converted'.
 
         Returns
-        =======
-        Pandas dataframe specifying sequence context, number of unconverted and
-        converted reads, and number of cytosines.
+        -------
+        pandas.DataFrame
+            DataFrame specifying sequence context, number of unconverted and
+            converted reads, and number of cytosines. Includes a 'total' row
+            with sums across all contexts.
+
         """
         # Read counts and cytosine number in each context
         mC_read_counts = data.groupby('context').sum(numeric_only = True)[['unconverted', 'converted']]
@@ -110,49 +128,57 @@ class CytosineCoverageFile(object):
     
     def methylation_over_features(self, chr, start, stop, names= None):
         """
-        Converted and unconverted reads across annotated features.
+        Count converted and unconverted reads across annotated features.
 
-        Counts the number of unconverted and converted reads and number of 
+        Counts the number of unconverted and converted reads and number of
         cytosines in CG, CHG and CHH contexts in each of multiple annotated
         features (e.g. genes, TEs).
 
         Note that values in chr must all match a chromosome in the coverage file.
 
         Parameters
-        ==========
-        chr: vector
+        ----------
+        chr : array-like
             Vector of chromosome labels to look up in the coverage file.
-        start: vector
+        start : array-like
             Vector of positions indexing the base-pair position of the start of
             each feature.
-        stop: vector
+        stop : array-like
             Vector of positions indexing the base-pair position of the end of
             each feature.
-        names: vector, optional
-            Vector of names for each feature.
+        names : array-like, optional
+            Vector of names for each feature. If None, features are named 
+            'feature0', 'feature1', etc.
 
         Returns
-        =======
-        Pandas dataframe specifying feature, sequence context, number of 
-        unconverted and converted reads, and number of cytosines.
+        -------
+        pandas.DataFrame
+            DataFrame specifying feature ID, sequence context, number of
+            unconverted and converted reads, and number of cytosines.
 
-        Example
-        =======
-        # Example annotation file using the first ten lines of the TAIR10 annotation
-        gff_file = pd.read_csv(
-            "tests/test_data/test_TAIR10_GFF3_genes_transposons.gff",
-            sep="\t",
-            names = ['seqid', 'source', 'type', 'start', 'end', 'score', 'strand', 'phase', 'attributes']
-            ).iloc[1:9] # Skip the first row, because it defines the whole chromosome
-        # Example coverage file
-        path="tests/test_data/test_coverage2cytosine.txt.gz"
-        c2c = CytosineCoverageFile(path)
-        
-        meth_counts = c2c.methylation_over_features(
-            chr = gff_file['seqid'],
-            start = gff_file['start'],
-            stop = gff_file['end']
-            ) 
+        Raises
+        ------
+        ValueError
+            If one or more values in `chr` is not found in the chromosome 
+            labels in the coverage file.
+
+        Examples
+        --------
+        >>> # Example annotation file using the first ten lines of the TAIR10 annotation
+        >>> gff_file = pd.read_csv(
+        ...     "tests/test_data/test_TAIR10_GFF3_genes_transposons.gff",
+        ...     sep="\t",
+        ...     names=['seqid', 'source', 'type', 'start', 'end', 'score', 'strand', 'phase', 'attributes']
+        ... ).iloc[1:9]  # Skip the first row, because it defines the whole chromosome
+        >>> # Example coverage file
+        >>> path = "tests/test_data/test_coverage2cytosine.txt.gz"
+        >>> c2c = CytosineCoverageFile(path)
+        >>> meth_counts = c2c.methylation_over_features(
+        ...     chr=gff_file['seqid'],
+        ...     start=gff_file['start'],
+        ...     stop=gff_file['end']
+        ... )
+
         """
         # check_chr_labels = any(~chr.isin(self.file['chr']))
         check_chr_labels = all([ any(self.file['chr'].str.contains(x)) for x in chr ])
@@ -180,32 +206,36 @@ class CytosineCoverageFile(object):
         Calculate methylation on each chromosome.
 
         Parameters
-        ==========
-        chr_labels: list of str, probably
-            List of chromosome labels indicating which chromosome to calculate 
+        ----------
+        chr_labels : list of str, optional
+            List of chromosome labels indicating which chromosomes to calculate
             conversion rate on. Defaults to all chromosomes.
-        return_proportion: bool
-            If True read counts are returned instead of proportion of unconverted
-            cytosines.
+        return_proportion : bool, default=True
+            If True, proportions of unconverted cytosines are returned. If False,
+            read counts are returned instead.
 
         Returns
-        =======
-        Pandas dataframe specifying chromosome, sequence context, proportion of
-        unconverted and converted cytosines, and number of cytosines. If 
-        `return_counts` is `True`, read counts are returned instead of
-        proportions.
+        -------
+        pandas.DataFrame
+            DataFrame specifying chromosome, sequence context, proportion (or count)
+            of unconverted and converted cytosines, and number of cytosines. If
+            `return_proportion` is True, includes an additional 'n_reads' column.
 
-        Example
-        =======
-        # Example coverage file
-        path="tests/test_data/test_coverage2cytosine.txt.gz"
-        c2c = CytosineCoverageFile(path)
+        Warnings
+        --------
+        Warns if one or more items in `chr_labels` is not found in the `chr` 
+        column of the cytosine coverage file.
 
-        # Return proportion of methylation on each chromosome
-        c2c.conversion_rate()
+        Examples
+        --------
+        >>> # Example coverage file
+        >>> path = "tests/test_data/test_coverage2cytosine.txt.gz"
+        >>> c2c = CytosineCoverageFile(path)
+        >>> # Return proportion of methylation on each chromosome
+        >>> c2c.conversion_rate()
+        >>> # Disable the conversion to proportions and return raw read counts
+        >>> c2c.conversion_rate(return_proportion=False)
 
-        # Disable the conversion to proportions and return raw read counts
-        c2c.conversion_rate(return_proportion = False)
         """
 
         if not chr_labels:
@@ -232,35 +262,34 @@ class CytosineCoverageFile(object):
     
     def methylation_in_windows(self, window_size:int, chr_labels:list=None):
         """
-        Count unconverted and converted reads in fixed windows
+        Count unconverted and converted reads in fixed windows.
 
-        Counts the number of unconverted and converted reads and number of 
+        Counts the number of unconverted and converted reads and number of
         cytosines in CG, CHG and CHH contexts in windows of fixed size across the
         genome.
 
-        To do: consider allowing for only a subset of chromosomes.
-
         Parameters
-        ==========
-        window_size: int
-            Window size in base pairs
-        chr_labels: list of str, probably
-            List of chromosome labels indicating which chromosome to calculate 
+        ----------
+        window_size : int
+            Window size in base pairs.
+        chr_labels : list of str, optional
+            List of chromosome labels indicating which chromosomes to calculate
             conversion rate on. Defaults to all chromosomes.
 
         Returns
-        =======
-        Pandas dataframe giving chromosome label, start position of the window,
-        sequence context, number of unconverted and converted reads, and total
-        number of cytosines.
+        -------
+        pandas.DataFrame
+            DataFrame giving chromosome label, start position of the window,
+            sequence context, number of unconverted and converted reads, and total
+            number of cytosines.
 
-        Example
-        =======
-        path="tests/test_data/test_coverage2cytosine.txt.gz"
-        c2c = CytosineCoverageFile(path)
+        Examples
+        --------
+        >>> path = "tests/test_data/test_coverage2cytosine.txt.gz"
+        >>> c2c = CytosineCoverageFile(path)
+        >>> # Methylation in 150-bp windows
+        >>> c2c.methylation_in_windows(150)
 
-        # Methylation in 150-bp windows
-        c2c.methylation_in_windows(150)
         """
         if not chr_labels:
             chr_labels = self.file['chr'].unique()

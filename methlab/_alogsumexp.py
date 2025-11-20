@@ -2,14 +2,16 @@ import numpy as np
 
 def alogsumexp(logarray, axis=0):
     """
-    Calculate the sum of an array of values which are in log space. If an axis is
-    specified, the sum across this axis is given.
+    Calculate the sum of an array of values which are in log space.
+    
+    Use the logsumexp trick to sum log values.
+    If an axis is specified, the sum across this axis is given.
     
     Parameters
     ----------
-    logarray: array
+    logarray : array
         An array of log values to be summed.
-    axis: int, optional
+    axis : int, optional
         Axis to sum across.
     
     Returns

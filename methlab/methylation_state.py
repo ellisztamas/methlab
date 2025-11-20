@@ -5,49 +5,81 @@ from methlab._alogsumexp import alogsumexp
 
 def methylation_state(read_counts:pd.DataFrame, ab_errors:tuple, return_probabilities:bool=False, hard_calls:bool=False):
     """
-    Likelihoods that windows or features of a genome are in one several distinct
-    states.
+    Calculate likelihoods that genomic windows or features are in distinct methylation states.
 
-    This takes a table of observed counts of converted and unconverted reads 
-    within windows or features in each sequence context and calculates
+    This function takes a table of observed counts of converted and unconverted 
+    reads within windows or features in each sequence context and calculates
     likelihoods that each is in one of several distinct methylation 'states'.
     The current implementation assesses the evidence for three states:
-    - Unmethylated (no methylated in any sequence context).
-    - Gene-body-like methylation (CG, but no CHG or CHH methylation).
-    - TE-like methylation (methylation in all three contexts).
+    
+    - Unmethylated: no methylation in any sequence context
+    - Gene-body-like methylation: CG methylation, but no CHG or CHH methylation
+    - TE-like methylation: methylation in all three contexts
 
-    This compares the evidence that observed methylated read counts patterns were
+    This compares the evidence that observed methylated read count patterns were
     generated from:
-    - the expected distribution of non-conversion errors, modelled as a
-        beta distribution
-    - an additional process, modelled as the cumulative distribution of the
-        same beta distribution.
+    
+    - The expected distribution of non-conversion errors, modelled as a
+      beta distribution
+    - An additional methylation process, modelled as the cumulative distribution 
+      of the same beta distribution
 
     Parameters
-    ==========
-    read_counts: dataframe
-        Pandas dataframe with (at least) columns 'id' giving a name for each 
-        feature,  'context' giving sequence context (CG, CHG, CHH, total),
+    ----------
+    read_counts : pandas.DataFrame
+        DataFrame with (at least) columns 'id' giving a name for each 
+        feature, 'context' giving sequence context (CG, CHG, CHH, total),
         'unconverted' and 'converted' (integer counts of unconverted and
-        converted reads mapping in each context; this can be generated from
-        methylation_over_features() or methylation_in_windows() from
-        CytosineCoverageFile).
-    ab_errors: tuple
+        converted reads mapping in each context). This can be generated from
+        `methylation_over_features()` or `methylation_in_windows()` from
+        `CytosineCoverageFile`.
+    ab_errors : tuple of float
         Tuple of length 2 giving the a and b shape parameters of the beta
         distribution describing variation in non-conversion errors.
-    return_probabilities: bool
+    return_probabilities : bool, default=False
         If True, likelihoods for each state are converted to probabilities that
         sum to one.
-    hard_calls: bool
-        If True, returns a column giving the most-likely state. Defaults to
-        False.
-    
+    hard_calls : bool, default=False
+        If True, returns a column 'call' giving the most-likely state for each
+        feature.
+
     Returns
-    =======
-    A dataframe giving ID, coverage, and (log) likelihoods that each
-    region/window is unmethylated, CG-methylated only, or TE-like methylated. If
-    `return_probabilities` is True, likelihoods are reported as probabilities
-    summing to one.
+    -------
+    pandas.DataFrame
+        DataFrame giving feature ID, number of cytosines, coverage, mean 
+        methylation (theta), and (log) likelihoods that each region/window is 
+        unmethylated, CG-methylated only, or TE-like methylated. If
+        `return_probabilities` is True, likelihoods are reported as probabilities
+        summing to one. If `hard_calls` is True, includes a 'call' column with
+        values 'unmethylated', 'CG-only', 'TE-like', or 'NA'.
+
+    Notes
+    -----
+    The function uses a beta distribution to model non-conversion errors and
+    compares observed methylation patterns against this null model. Methylation
+    rates of exactly 0 or 1 are adjusted to 1e-12 and 1-1e-12 respectively to
+    avoid numerical issues.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> # Example read counts data
+    >>> read_counts = pd.DataFrame({
+    ...     'id': ['gene1', 'gene1', 'gene1', 'gene1'],
+    ...     'context': ['CG', 'CHG', 'CHH', 'total'],
+    ...     'unconverted': [50, 5, 3, 58],
+    ...     'converted': [50, 95, 97, 242],
+    ...     'ncytosines': [10, 20, 30, 60]
+    ... })
+    >>> # Define error parameters
+    >>> ab_errors = (2, 100)
+    >>> # Calculate methylation states
+    >>> result = methylation_state(read_counts, ab_errors)
+    >>> # Get probabilities instead of log-likelihoods
+    >>> result_probs = methylation_state(read_counts, ab_errors, return_probabilities=True)
+    >>> # Get hard calls for methylation state
+    >>> result_calls = methylation_state(read_counts, ab_errors, hard_calls=True)
+
     """
 
     # Mean methylation
