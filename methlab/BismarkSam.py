@@ -25,10 +25,28 @@ class BismarkSam(object):
         matches the *start* of each tag, and pulls out the string after the end
         of the tag name.
 
-        Example
-        =======
-        # Strand can be coded as "YS:Z:CTOT", and you want to retreive "CTOT"
-        read.get_tag("YS:Z:")
+        Parameters
+        ----------
+        tag_name : str
+            Tag prefix to search for, for example ``"YS:Z:"`` or ``"XM:Z:"``.
+
+        Returns
+        -------
+        str
+            The value of the matching tag, or ``"NA"`` if no such tag is present.
+
+        Raises
+        ------
+        ValueError
+            If more than one tag is found with the same tag ID.
+
+        Examples
+        --------
+        Strand can be coded as ``"YS:Z:CTOT"``, and you want to retrieve
+        ``"CTOT"``:
+
+        >>> read.get_tag("YS:Z:")
+        'CTOT'
         """
         tag_length = len(tag_name)
         tag_value = [tag[tag_length:] for tag in self.read if tag[:tag_length] == tag_name]
@@ -42,7 +60,12 @@ class BismarkSam(object):
 
     def count_mC(self):
         """
-        Count how many cytosines on a read are methylated, unmethylated, and the total.
+        Count the number of methylated and unmethylated cytosines on this read.
+
+        Returns
+        -------
+        list of int
+            Two-element list ``[methylated, unmethylated]``.
         """
         upper = 0
         lower = 0
@@ -57,10 +80,17 @@ class BismarkSam(object):
 
     def mC_cluster(self) :
         """
-        Check whether all the methylated cytosines appear together in a read
-        (there  are no unmethylated cytosines between methylated cytosines).
-        
-        It is important that non-cytosines have been removed from the read.
+        Check whether all methylated cytosines appear together in this read.
+
+        A cluster is defined as one or more consecutive methylated cytosines
+        with no unmethylated cytosines in between. It is important that
+        non-cytosines have been removed from the read before calling this.
+
+        Returns
+        -------
+        bool
+            ``True`` if there is at most one methylated cluster, ``False``
+            if multiple clusters are found.
         """
         flag = False
         index = 0
@@ -81,8 +111,13 @@ class BismarkSam(object):
     
     def mC_per_read(self):
         """
-        Summarise the number of methylated reads, unmethylated reads, total read
-        length, and whether or not cytosines are occur next to one another
+        Summarise methylation status for this read.
+
+        Returns
+        -------
+        list
+            A 5-element list ``[chromosome, methylated, unmethylated, length, cluster]``,
+            where ``cluster`` is ``True``/``False`` or ``"NA"`` if not applicable.
         """
         total = self.length
                         
@@ -97,16 +132,17 @@ class BismarkSam(object):
 
 def read_SAM(input:str):
     """
-    Import a SAM file.
+    Import a SAM file and parse each read into a :class:`BismarkSam` object.
 
     Parameters
-    ==========
-    input: str
-        Path to a SAM file.
-    
+    ----------
+    path : str
+        Path to a SAM file exported from Bismark.
+
     Returns
-    =======
-    A list of BismarkSam objects.
+    -------
+    list of BismarkSam
+        Parsed SAM reads wrapped in :class:`BismarkSam` objects.
     """
     # Import samfile line by line
     reads = [line.split("\t") for line in open(input, "r").read().split("\n")]
